@@ -60,6 +60,27 @@ internal sealed class CreateTransactionTests : TestBase
     }
 
     [Test]
+    public async Task Handle_AmountIsTooPrecise_BusinessException()
+    {
+        // Arrange
+        var account = Account.Create("account");
+        Context.Add(account);
+        await Context.SaveChangesAsync();
+        
+        var request = new CreateTransactionCommand
+        {
+            AccountId = account.Id,
+            Name = "Name",
+            Amount = -15.543m,
+            Date = DateTime.Now,
+            Type = TransactionType.Expense
+        };
+        // Act && Assert
+        var action = async () => await handler.Handle(request, CancellationToken.None);
+        await action.Should().ThrowAsync<BusinessException>();
+    }
+
+    [Test]
     [TestCase(0.0, TransactionType.Expense)]
     [TestCase(0.0, TransactionType.Income)]
     [TestCase(15.0, TransactionType.Expense)]

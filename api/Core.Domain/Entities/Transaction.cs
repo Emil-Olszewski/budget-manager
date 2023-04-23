@@ -19,6 +19,11 @@ public sealed record TransactionDetails
 
     public TransactionDetails(decimal amount, TransactionType transactionType)
     {
+        if (amount % 0.01m != 0)
+        {
+            throw new BusinessException("Amount has too high precision");
+        }
+        
         if (transactionType == TransactionType.NotDefined)
         {
             throw new BusinessException("Transaction type must be defined");
@@ -33,7 +38,7 @@ public sealed record TransactionDetails
             case < 0 when transactionType == TransactionType.Income:
                 throw new BusinessException("Income cannot have negative amount");
         }
-
+        
         Amount = amount;
         TransactionType = transactionType;
     }
