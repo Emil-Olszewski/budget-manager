@@ -9,7 +9,22 @@ export interface Account {
   id: number;
   name: string;
   currency: Currency;
-}
-export interface AccountWithBalance extends Account {
   balance: number;
+}
+
+export interface AccountWithInitialBalance {
+  id: number;
+  name: string;
+  currency: Currency;
+  initialBalance: number | null;
+}
+
+export interface CreateAccount {
+  name: string;
+  currency: Currency;
+  initialBalance: number | null;
+}
+
+export interface UpdateAccount extends CreateAccount {
+  id: number;
 }

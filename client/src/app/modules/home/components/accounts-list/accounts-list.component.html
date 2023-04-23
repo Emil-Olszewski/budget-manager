@@ -1,12 +1,6 @@
 <h1>Accounts</h1>
 <hr>
 <ng-container *ngIf="accounts$ | async as accounts">
-  <ng-container *ngIf="accounts.length === 0; else accountsList">
-    You have no accounts yet.
-  </ng-container>
-</ng-container>
-
-<ng-template #accountsList>
   <div class="row">
     <div *ngFor="let account of accounts$ | async" class=" col-3">
       <div class="card card-body">
@@ -24,5 +18,7 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-container>
+
+
 

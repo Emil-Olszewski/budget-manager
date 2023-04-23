@@ -35,6 +35,17 @@
             <app-form-control-validation-error [control]="form.controls['currency']">
             </app-form-control-validation-error>
           </div>
+          <div>
+            <label for="name" class="form-label">Initial balance</label>
+            <input class="form-control"
+                   id="initialBalance"
+                   type="number"
+                   placeholder="Enter initial balance"
+                   formControlName="initialBalance"
+                   formControlValidation="form.controls['initialBalance']">
+            <app-form-control-validation-error [control]="form.controls['initialBalance']">
+            </app-form-control-validation-error>
+          </div>
           <div class="row justify-content-around">
             <div class="col">
               <button type="submit" class="btn btn-primary">Save</button>

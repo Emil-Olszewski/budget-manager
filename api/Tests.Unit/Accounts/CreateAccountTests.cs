@@ -53,4 +53,21 @@ internal sealed class CreateAccountTests : TestBase
         // Assert
         Context.Accounts.ToList().Should().ContainSingle(x => x.Name == "Test name");
     }
+    
+    [Test]
+    public async Task Handle_WithInitialBalance_AccountCreated()
+    {
+        // Arrange
+        var command = new CreateAccountCommand("Test name", Currency.Pln, 15.0m);
+
+        // Act
+        await handler.Handle(command, CancellationToken.None);
+        
+        // Assert
+        Context.Accounts.ToList().Should().ContainSingle(x => x.Name == "Test name");
+        Context.Transactions.ToList().Should()
+            .ContainSingle(x =>
+                x.TransactionDetails.TransactionType == TransactionType.InitialBalance 
+                && x.TransactionDetails.Amount == 15.0m);
+    }
 }

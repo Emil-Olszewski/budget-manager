@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Features.Accounts;
 
-internal sealed class AccountWithBalanceResponse
+internal sealed class AccountResponse
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -13,9 +13,10 @@ internal sealed class AccountWithBalanceResponse
     public Currency Currency { get; set; }
 }
 
-public sealed record GetAllAccountsQuery : IRequest<List<AccountWithBalanceResponse>>;
 
-internal sealed class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, List<AccountWithBalanceResponse>>
+public sealed record GetAllAccountsQuery : IRequest<List<AccountResponse>>;
+
+internal sealed class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, List<AccountResponse>>
 {
     private readonly IContext context;
 
@@ -24,11 +25,11 @@ internal sealed class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccount
         this.context = context;
     }
     
-    public async Task<List<AccountWithBalanceResponse>> Handle(GetAllAccountsQuery request, CancellationToken ct)
+    public async Task<List<AccountResponse>> Handle(GetAllAccountsQuery request, CancellationToken ct)
     {
         return await context.Set<Account>()
             .AsNoTracking()
-            .Select(x => new AccountWithBalanceResponse
+            .Select(x => new AccountResponse
             {
                 Id = x.Id,
                 Name = x.Name,

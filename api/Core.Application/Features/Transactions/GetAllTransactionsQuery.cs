@@ -22,6 +22,7 @@ internal sealed class GetAllTransactionQueryHandler : IRequestHandler<GetAllTran
             .AsNoTracking()
             .Include(x => x.Account)
             .Include(x => x.Tags).ThenInclude(x => x.Parent)
+            .Where(x => x.TransactionDetails.TransactionType != TransactionType.InitialBalance)
             .Select(x => TransactionResponse.MapFrom(x))
             .ToListAsync(ct)
             .ConfigureAwait(false);

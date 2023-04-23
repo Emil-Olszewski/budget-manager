@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AccountWithBalance } from "../../models/account";
 import { Observable } from "rxjs";
+import { Account } from "../../models/account";
 
 @Component({
   selector: 'app-accounts-list',
@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
   styleUrls: ['./accounts-list.component.scss']
 })
 export class AccountsListComponent {
-  @Input() public accounts$!: Observable<AccountWithBalance[]>;
+  @Input() public accounts$!: Observable<Account[]>;
   @Output() public showDetails$: EventEmitter<number> = new EventEmitter<number>();
   @Output() public addAccount$: EventEmitter<never> = new EventEmitter<never>();
 }

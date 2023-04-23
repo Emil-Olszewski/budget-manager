@@ -31,7 +31,7 @@ public sealed record TransactionDetails
         
         switch (amount)
         {
-            case 0 when transactionType != TransactionType.InitialBalance:
+            case 0:
                 throw new BusinessException("Transaction amount cannot be equal to 0");
             case > 0 when transactionType == TransactionType.Expense:
                 throw new BusinessException("Expense cannot have positive amount");
@@ -112,6 +112,16 @@ public sealed class Transaction : AuditableBaseEntity
             Name = name,
             transactionDetails = transactionDetails,
             Date = dateTime
+        };
+    }
+
+    internal static Transaction CreateInitialBalanceTransaction(decimal amount)
+    {
+        return new Transaction
+        {
+            Name = "Initial balance",
+            transactionDetails = new TransactionDetails(amount, TransactionType.InitialBalance),
+            Date = new DateTime(),
         };
     }
 

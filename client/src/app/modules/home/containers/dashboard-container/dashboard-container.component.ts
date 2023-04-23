@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReplaySubject, take } from 'rxjs';
 import { AccountsService } from "../../services/accounts.service";
-import { AccountWithBalance } from "../../models/account";
+import { Account } from "../../models/account";
 import { Router } from "@angular/router";
 import { TransactionsService } from "../../services/transactions.service";
 import { Transaction } from "../../models/transaction";
@@ -13,7 +13,7 @@ import { Transaction } from "../../models/transaction";
   styleUrls: ['./dashboard-container.component.scss']
 })
 export class DashboardContainerComponent implements OnInit {
-  public accounts$: ReplaySubject<AccountWithBalance[]> = new ReplaySubject<AccountWithBalance[]>();
+  public accounts$: ReplaySubject<Account[]> = new ReplaySubject<Account[]>();
   public transactions$: ReplaySubject<Transaction[]> = new ReplaySubject<Transaction[]>();
   constructor(private accountsService: AccountsService, private transactionsService: TransactionsService, private router: Router) { }
   public ngOnInit(): void {

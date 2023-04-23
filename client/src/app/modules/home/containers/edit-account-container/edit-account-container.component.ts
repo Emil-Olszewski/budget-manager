@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccountsService } from "../../services/accounts.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ReplaySubject, take } from "rxjs";
-import { Account } from "../../models/account";
+import { AccountWithInitialBalance, UpdateAccount } from "../../models/account";
 
 @Component({
   selector: 'app-edit-account-container',
@@ -11,7 +11,7 @@ import { Account } from "../../models/account";
 })
 export class EditAccountContainerComponent implements OnInit {
   private id!: number;
-  public account$: ReplaySubject<Account> = new ReplaySubject<Account>();
+  public account$: ReplaySubject<AccountWithInitialBalance> = new ReplaySubject<AccountWithInitialBalance>();
   public constructor(private service: AccountsService, private route: ActivatedRoute, private router: Router) {
   }
 
@@ -41,7 +41,7 @@ export class EditAccountContainerComponent implements OnInit {
       });
   }
 
-  public save(account: Account) {
+  public save(account: UpdateAccount) {
     if (account.id > 0) {
       this.service.updateAccount(account)
         .pipe(take(1))

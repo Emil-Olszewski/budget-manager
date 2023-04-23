@@ -2,7 +2,7 @@
 import { ApiService } from "../../../core/http/api.service";
 import { Observable } from "rxjs";
 import { ApiResponse } from "../../../shared/models/api-response";
-import { Account, AccountWithBalance } from "../models/account";
+import { Account, AccountWithInitialBalance, CreateAccount, UpdateAccount } from "../models/account";
 
 
 @Injectable({
@@ -11,19 +11,19 @@ import { Account, AccountWithBalance } from "../models/account";
 export class AccountsService {
   public constructor(private service: ApiService) { }
 
-  public getAllAccounts(): Observable<ApiResponse<AccountWithBalance[]>> {
+  public getAllAccounts(): Observable<ApiResponse<Account[]>> {
     return this.service.get("accounts");
   }
 
-  public getAccount(id: number): Observable<ApiResponse<Account>> {
+  public getAccount(id: number): Observable<ApiResponse<AccountWithInitialBalance>> {
     return this.service.get("accounts/" + id);
   }
 
-  public createAccount(account: Account): Observable<undefined> {
+  public createAccount(account: CreateAccount): Observable<undefined> {
     return this.service.post("accounts", account);
   }
 
-  public updateAccount(account: Account): Observable<undefined> {
+  public updateAccount(account: UpdateAccount): Observable<undefined> {
     return this.service.put("accounts/" + account.id, account);
   }
 

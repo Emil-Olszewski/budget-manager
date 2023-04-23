@@ -25,7 +25,7 @@ internal sealed class GetAllAccountsTests : TestBase
             Account.Create("Account1"),
             Account.Create("Account2")
         };
-
+        
         Context.AddRange(accounts);
         await Context.SaveChangesAsync();
 
@@ -36,5 +36,24 @@ internal sealed class GetAllAccountsTests : TestBase
         
         // Arrange
         result.Should().HaveSameCount(accounts);
+    }
+    
+    [Test]
+    public async Task Handle_WithInitialBalance_AccountsReturned()
+    {
+        // Arrange
+        var account = Account.Create("Account1");
+        account.SetInitialBalance(15.0M);
+        
+        Context.Add(account);
+        await Context.SaveChangesAsync();
+
+        var request = new GetAllAccountsQuery();
+        
+        // Act
+        var result = await handler.Handle(request, CancellationToken.None);
+        
+        // Arrange
+        result.Should().ContainSingle(x => x.Balance == 15.0M);
     }
 }

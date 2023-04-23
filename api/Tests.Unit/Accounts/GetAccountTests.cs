@@ -48,4 +48,24 @@ internal sealed class GetAccountTests : TestBase
         // Arrange
         result.Name.Should().Be("Account1");
     }
+    
+    [Test]
+    public async Task Handle_WithInitialBalance_AccountReturned()
+    {
+        // Arrange
+        var account = Account.Create("Account1");
+        account.SetInitialBalance(15.0M);
+
+        Context.AddRange(account);
+        await Context.SaveChangesAsync();
+
+        var request = new GetAccountQuery(1);
+        
+        // Act
+        var result = await handler.Handle(request, CancellationToken.None);
+        
+        // Arrange
+        result.InitialBalance.Should().Be(15.0M);
+
+    }
 }

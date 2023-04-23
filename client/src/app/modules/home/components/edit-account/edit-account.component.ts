@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, take } from "rxjs";
-import { Account, Currency } from "../../models/account";
+import { AccountWithInitialBalance, Currency, UpdateAccount } from "../../models/account";
 
 @Component({
   selector: 'app-edit-account',
@@ -11,13 +11,14 @@ import { Account, Currency } from "../../models/account";
 export class EditAccountComponent implements OnInit {
   private id!: number;
   public Currency = Currency;
-  @Input() public account$!: Observable<Account>;
-  @Output() public save$: EventEmitter<Account> = new EventEmitter<Account>();
+  @Input() public account$!: Observable<AccountWithInitialBalance>;
+  @Output() public save$: EventEmitter<UpdateAccount> = new EventEmitter<UpdateAccount>();
   @Output() public delete$: EventEmitter<never> = new EventEmitter<never>();
   @Output() public goBack$: EventEmitter<never> = new EventEmitter<never>();
   public form: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.maxLength(40)]),
-    currency: new FormControl('', [Validators.required])
+    currency: new FormControl('', [Validators.required]),
+    initialBalance: new FormControl(),
   });
 
   public ngOnInit(): void {
@@ -28,9 +29,10 @@ export class EditAccountComponent implements OnInit {
     this.account$
       .pipe(take(1))
       .subscribe(x => {
+        this.id = x.id;
         this.form.controls['name'].setValue(x.name);
         this.form.controls['currency'].setValue(x.currency);
-        this.id = x.id;
+        this.form.controls['initialBalance'].setValue(x.initialBalance);
       });
   }
 
@@ -39,10 +41,11 @@ export class EditAccountComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    const account: Account = {
+    const account: UpdateAccount = {
       id: this.id,
       name: this.form.controls['name'].value,
-      currency: +this.form.controls['currency'].value
+      currency: +this.form.controls['currency'].value,
+      initialBalance: this.form.controls['initialBalance'].value
     };
     this.save$.emit(account);
   }

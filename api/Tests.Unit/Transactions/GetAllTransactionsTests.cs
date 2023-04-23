@@ -1,5 +1,4 @@
-﻿using Core.Application.Features.Accounts;
-using Core.Application.Features.Transactions;
+﻿using Core.Application.Features.Transactions;
 using Core.Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
@@ -49,5 +48,25 @@ internal sealed class GetAllTransactionsTests : TestBase
         result.First().Tags.Should().HaveCount(2);
         result.First().Tags.Should().ContainSingle(x => x.Name == "Tag/Child");
         result.First().Tags.Should().ContainSingle(x => x.Name == "Child/Grandchild");
+    }
+
+    [Test]
+    public async Task Handle_OnlyTransactionWithInitialBalance_NoTransactionsReturned()
+    {
+        // Arrange
+        var account = Account.Create("Account1");
+        account.SetInitialBalance(15.0M);
+
+        Context.Add(account);
+        await Context.SaveChangesAsync();
+        
+        var request = new GetAllTransactionsQuery();
+
+        // Act
+        var result = await handler.Handle(request, CancellationToken.None);
+        
+          
+        // Arrange
+        result.Should().BeEmpty();
     }
 }

@@ -65,4 +65,24 @@ public sealed class Account : AuditableBaseEntity
             Currency = currency
         };
     }
+
+    public void SetInitialBalance(decimal amount)
+    {
+        var initialBalanceTransaction = transactions
+            .SingleOrDefault(x => x.TransactionDetails.TransactionType == TransactionType.InitialBalance);
+
+        if (initialBalanceTransaction is null)
+        {
+            initialBalanceTransaction = Transaction.CreateInitialBalanceTransaction(amount);
+            transactions.Add(initialBalanceTransaction);
+        }
+
+        if (amount == 0)
+        {
+            transactions.Remove(initialBalanceTransaction);
+            return;
+        }
+
+        initialBalanceTransaction.TransactionDetails = new TransactionDetails(amount, TransactionType.InitialBalance);
+    }
 }

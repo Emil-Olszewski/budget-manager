@@ -6,11 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Features.Accounts;
 
-internal sealed record AccountResponse(int Id, string Name, Currency Currency);
+internal sealed class AccountWithInitialBalanceResponse
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public decimal? InitialBalance { get; set; }
+    public Currency Currency { get; set; }
+}
 
-public record GetAccountQuery(int Id) : IRequest<AccountResponse>;
+public record GetAccountQuery(int Id) : IRequest<AccountWithInitialBalanceResponse>;
 
-internal sealed class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, AccountResponse>
+internal sealed class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, AccountWithInitialBalanceResponse>
 {
     private readonly IContext context;
 
@@ -19,12 +25,21 @@ internal sealed class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, 
         this.context = context;
     }
     
-    public async Task<AccountResponse> Handle(GetAccountQuery request, CancellationToken ct)
+    public async Task<AccountWithInitialBalanceResponse> Handle(GetAccountQuery request, CancellationToken ct)
     {
         var account = await context.Set<Account>()
             .AsNoTracking()
             .Where(x => x.Id == request.Id)
-            .Select(x => new AccountResponse(x.Id, x.Name, x.Currency))
+            .Select(x => new AccountWithInitialBalanceResponse
+            {
+                Id = x.Id,
+                Name = x.Name,
+                InitialBalance = 
+                    x.Transactions.Any(y => y.TransactionDetails.TransactionType == TransactionType.InitialBalance) ?
+                        x.Transactions.First(y => y.TransactionDetails.TransactionType == TransactionType.InitialBalance).TransactionDetails.Amount
+                        : null,
+                Currency = x.Currency
+            })
             .SingleOrDefaultAsync(ct)
             .ConfigureAwait(false);
 
