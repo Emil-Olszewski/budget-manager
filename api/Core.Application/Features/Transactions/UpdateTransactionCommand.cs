@@ -49,11 +49,6 @@ internal sealed class UpdateTransactionCommandHandler : IRequestHandler<UpdateTr
             throw new BusinessException("Account does not exists");
         }
 
-        transaction.Account = account;
-        transaction.Name = request.Name;
-        transaction.Date = request.Date;
-        transaction.TransactionDetails = new TransactionDetails(request.Amount, request.Type);
-
         var transactionTagIds = transaction.Tags.Select(x => x.Id).ToList();
         
         var tagIdsToAdd = request.TagIds.Except(transactionTagIds).ToList();
@@ -82,6 +77,11 @@ internal sealed class UpdateTransactionCommandHandler : IRequestHandler<UpdateTr
         {
             transaction.RemoveTag(tag);
         }
+        
+        transaction.Account = account;
+        transaction.Name = request.Name;
+        transaction.Date = request.Date;
+        transaction.TransactionDetails = new TransactionDetails(request.Amount, request.Type);
         
         await context.SaveChangesAsync(ct);
     }

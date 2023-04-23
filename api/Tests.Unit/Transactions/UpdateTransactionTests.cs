@@ -284,6 +284,7 @@ internal sealed class UpdateTransactionTests : TestBase
             Amount = -100.0m,
             Date = DateTime.Now,
             Type = TransactionType.Expense,
+            TagIds = new List<int> { tag.Id }
         };
         
         // Act && Assert
@@ -369,6 +370,34 @@ internal sealed class UpdateTransactionTests : TestBase
     [Test]
     public async Task Handle_TypeModifiedAndTagsDetached_TransactionUpdated()
     {
-        Assert.Fail();
+        // Arrange
+        var account = Account.Create("account");
+        Context.Add(account);
+
+        var transactionDetails = new TransactionDetails(100.0m, TransactionType.Income);
+        var transaction = Transaction.Create(account, "Name", transactionDetails, DateTime.Now);
+        
+        var tag = Tag.Create(null, "tag", TagType.ForIncome);
+        transaction.AddTag(tag);
+        
+        Context.Add(transaction);
+        
+        await Context.SaveChangesAsync();
+        
+        var request = new UpdateTransactionCommand
+        {
+            Id = transaction.Id,
+            AccountId = account.Id,
+            Name = "Renamed",
+            Amount = -100.0m,
+            Date = DateTime.Now,
+            Type = TransactionType.Expense,
+        };
+        
+        // Act
+        await handler.Handle(request, CancellationToken.None);
+        
+        // Assert
+        Context.Transactions.ToList().Should().ContainSingle(x => x.Name == "Renamed");
     }
 }
