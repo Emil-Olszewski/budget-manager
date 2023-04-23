@@ -1,0 +1,17 @@
+<div class="row">
+  <app-accounts-list
+    [accounts$]="accounts$"
+    (showDetails$)="showAccountDetails($event)"
+    (addAccount$)="addAccount()">
+  </app-accounts-list>
+</div>
+
+<div class="row mt-5">
+  <app-transactions-list
+    [transactions$]="transactions$"
+    [accounts$]="accounts$"
+    (addTransaction$)="addTransaction()"
+    (showDetails$)="showTransactionDetails($event)">
+  </app-transactions-list>
+
+</div>

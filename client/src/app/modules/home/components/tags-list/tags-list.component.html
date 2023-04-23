@@ -1,0 +1,20 @@
+<h1>Tags</h1>
+<hr>
+<ng-container *ngIf="tags$ | async as tags">
+  <ng-container *ngIf="tags.length > 0; else noTags">
+    <div *ngFor="let tag of tags">
+      <span class="badge bg-primary" (click)="editTag$.emit(tag.id)">{{tag.name}}</span>
+      <div class="mt-1 mx-3">
+        <ng-container  *ngFor="let child of tag.children">
+          <span class="badge bg-primary" (click)="editTag$.emit(child.id)">{{child.name}}</span>
+          &nbsp;
+        </ng-container>
+        <button class="btn btn-sm btn-outline-primary" (click)="addChild$.emit(tag.id)">Add child</button>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+<ng-template #noTags>
+  You haven't created any tag yet
+</ng-template>
+<button class="btn btn-primary mt-5" (click)="addTag$.emit()">Add tag</button>

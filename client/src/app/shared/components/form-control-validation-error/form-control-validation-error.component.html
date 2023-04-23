@@ -1,0 +1,17 @@
+<div class="mt-2">
+  <ul>
+     <li *ngIf="control.touched && control.errors?.['required']" class="text-danger">
+        Value is required
+    </li>
+    <li *ngIf="control.touched && control.errors?.['maxlength']" class="text-danger">
+       Entered {{control.errors?.['maxlength'].actualLength}} cases
+        from {{control.errors?.['maxlength'].requiredLength}} allowed
+    </li>
+    <li *ngIf="control.touched && control.errors?.['max']" class="text-danger">
+        Maximum value is {{control.errors?.['max'].max}}
+    </li>
+    <li *ngIf="control.touched && control.errors?.['min']" class="text-danger">
+        Minimum value is {{control.errors?.['min'].min}}
+    </li>
+  </ul>
+</div>

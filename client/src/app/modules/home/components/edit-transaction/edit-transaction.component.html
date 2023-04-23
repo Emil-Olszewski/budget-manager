@@ -1,0 +1,87 @@
+<div class="card">
+  <div class="card-body">
+    <div>
+      <h1>
+        <ng-container *ngIf="transaction$ | async; else create">
+          Edit
+        </ng-container>
+        <ng-template #create>
+          Create
+        </ng-template>
+        transaction
+      </h1>
+      <div class="mt-3">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <div class="form-group">
+            <label for="account" class="form-label">Account</label>
+            <ng-container *ngIf="accounts$ | async as accounts">
+              <select class="form-select" id="account"
+                      formControlName="account"
+                      formControlValidation="form.controls['account']">
+                <option *ngFor="let account of accounts" [value]="account.id" >{{account.name}}</option>
+              </select>
+            </ng-container>
+            <app-form-control-validation-error [control]="form.controls['account']">
+            </app-form-control-validation-error>
+          </div>
+          <div>
+            <label for="name" class="form-label">Name</label>
+            <input class="form-control"
+                   id="name"
+                   type="text"
+                   placeholder="Enter name"
+                   formControlName="name"
+                   formControlValidation="form.controls['name']">
+            <app-form-control-validation-error [control]="form.controls['name']">
+            </app-form-control-validation-error>
+          </div>
+          <div>
+            <label for="amount" class="form-label">Amount</label>
+            <input class="form-control"
+                   id="amount"
+                   type="number"
+                   placeholder="Enter amount"
+                   formControlName="amount"
+                   formControlValidation="form.controls['amount']">
+            <app-form-control-validation-error [control]="form.controls['amount']">
+            </app-form-control-validation-error>
+          </div>
+          <div>
+            <label for="date" class="form-label">Date</label>
+            <input class="form-control"
+                   id="date"
+                   type="date"
+                   placeholder="Enter date"
+                   formControlName="date"
+                   formControlValidation="form.controls['date']">
+            <app-form-control-validation-error [control]="form.controls['date']">
+            </app-form-control-validation-error>
+          </div>
+          <div>
+              <div>
+                <label class="form-label">Tags</label>
+              </div>
+              <ng-container *ngIf="tags$ | async as tags">
+                <ng-container *ngIf="transactionTags$ | async as selectedTags">
+                   <span class="badge bg-primary" *ngFor="let tag of tags"
+                         [ngClass]="selectedTags.includes(tag) ? 'bg-primary' : 'bg-secondary'"
+                      (click)="selectTag(tag)">
+                    {{tag.name}}
+                  </span>
+                </ng-container>
+              </ng-container>
+          </div>
+          <div class="row justify-content-around mt-3">
+            <div class="col">
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            <div class="col text-end">
+              <button type="button" class="btn btn-outline-primary" (click)="goBack$.emit()">Go back</button> &nbsp;
+              <button *ngIf="transaction$ | async" type="button" class="btn btn-danger" (click)="delete$.emit()">Delete</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<h1>Transactions</h1>
+<hr>
+<ng-container *ngIf="transactions$ | async as transactions">
+  <ng-container *ngIf="transactions.length === 0; else transactionsList">
+    You have no transactions yet.
+  </ng-container>
+</ng-container>
+
+<ng-template #transactionsList>
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th scope="col">Account</th>
+    <th scope="col">Name</th>
+    <th scope="col">Amount</th>
+    <th scope="col">Date</th>
+    <th scope="col">Tags</th>
+  </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngIf="transactions$ | async as transactions">
+      <ng-container *ngIf="accounts$ | async as accounts">
+        <tr *ngFor="let transaction of transactions" (click)="showDetails$.emit(transaction.id)" class="clickable">
+          <td>{{getAccountName(transaction.accountId, accounts)}}</td>
+          <td>{{transaction.name}}</td>
+          <td [ngClass]="getColorForType(transaction.type)">{{transaction.amount | number: '1.2'}} PLN</td>
+          <td>{{transaction.date | date: 'dd-MM-yyyy'}}</td>
+          <td>
+            <span *ngFor="let tag of transaction.tags" class="badge bg-primary">
+              {{tag.name}}
+            </span>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</table>
+</ng-template>
+  <button class="btn btn-primary" (click)="addTransaction$.emit()">Add transaction</button>
