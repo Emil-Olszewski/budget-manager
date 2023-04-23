@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { FormControlValidationErrorComponent } from './components/form-control-validation-error/form-control-validation-error.component';
 import { FormControlValidationDirective } from './directives/form-control-validation.directive';
+import { CurrencyNamePipe } from './pipes/currency-name.pipe';
 
 
 
@@ -11,11 +12,13 @@ import { FormControlValidationDirective } from './directives/form-control-valida
     ErrorMessageComponent,
     FormControlValidationErrorComponent,
     FormControlValidationDirective,
+    CurrencyNamePipe,
     ],
   exports: [
     ErrorMessageComponent,
     FormControlValidationErrorComponent,
-    FormControlValidationDirective
+    FormControlValidationDirective,
+    CurrencyNamePipe
   ],
   imports: [
     CommonModule

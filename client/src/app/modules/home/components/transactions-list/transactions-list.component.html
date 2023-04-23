@@ -23,7 +23,10 @@
         <tr *ngFor="let transaction of transactions" (click)="showDetails$.emit(transaction.id)" class="clickable">
           <td>{{getAccountName(transaction.accountId, accounts)}}</td>
           <td>{{transaction.name}}</td>
-          <td [ngClass]="getColorForType(transaction.type)">{{transaction.amount | number: '1.2'}} PLN</td>
+          <td [ngClass]="getColorForType(transaction.type)">
+            {{transaction.amount | number: '1.2'}}
+            {{getAccountCurrency(transaction.accountId, accounts) | currencyName }}
+          </td>
           <td>{{transaction.date | date: 'dd-MM-yyyy'}}</td>
           <td>
             <span *ngFor="let tag of transaction.tags" class="badge bg-primary">

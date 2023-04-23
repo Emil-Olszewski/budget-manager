@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Features.Accounts;
 
-public record UpdateAccountCommand(int Id, string Name) : IRequest;
+public record UpdateAccountCommand(int Id, string Name, Currency Currency) : IRequest;
 
 internal sealed class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand>
 {
@@ -30,6 +30,7 @@ internal sealed class UpdateAccountCommandHandler : IRequestHandler<UpdateAccoun
         }
 
         account.Name = request.Name;
+        account.Currency = request.Currency;
         
         await context.SaveChangesAsync(ct).ConfigureAwait(false);
     }

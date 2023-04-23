@@ -3,6 +3,14 @@ using Core.Domain.Exceptions;
 
 namespace Core.Domain.Entities;
 
+public enum Currency
+{
+    NotDefined = 0,
+    Pln = 1,
+    Eur = 2,
+    Usd = 3,
+}
+
 public sealed class Account : AuditableBaseEntity
 {
     private string name;
@@ -25,6 +33,22 @@ public sealed class Account : AuditableBaseEntity
         }
     }
 
+    private Currency currency;
+
+    public Currency Currency
+    {
+        get => currency;
+        set
+        {
+            if (value == Currency.NotDefined)
+            {
+                throw new BusinessException("Currency must be defined");
+            }
+
+            currency = value;
+        }
+    }
+
     private readonly List<Transaction> transactions;
     public ICollection<Transaction> Transactions => transactions.AsReadOnly();
     
@@ -33,11 +57,12 @@ public sealed class Account : AuditableBaseEntity
         transactions = new List<Transaction>();
     }
 
-    public static Account Create(string name)
+    public static Account Create(string name, Currency currency = Currency.Pln)
     {
         return new Account
         {
-            Name = name
+            Name = name,
+            Currency = currency
         };
     }
 }

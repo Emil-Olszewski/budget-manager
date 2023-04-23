@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Core.Application.Features.Accounts;
 
-public record CreateAccountCommand(string Name) : IRequest;
+public record CreateAccountCommand(string Name, Currency Currency) : IRequest;
 
 internal sealed class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand>
 {
@@ -17,7 +17,7 @@ internal sealed class CreateAccountCommandHandler : IRequestHandler<CreateAccoun
     
     public async Task Handle(CreateAccountCommand request, CancellationToken ct)
     {
-        var account = Account.Create(request.Name);
+        var account = Account.Create(request.Name, request.Currency);
         
         context.Add(account);
         await context.SaveChangesAsync(ct).ConfigureAwait(false);

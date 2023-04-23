@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Features.Accounts;
 
-internal sealed record AccountResponse(int Id, string Name);
+internal sealed record AccountResponse(int Id, string Name, Currency Currency);
 
 public record GetAccountQuery(int Id) : IRequest<AccountResponse>;
 
@@ -24,7 +24,7 @@ internal sealed class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, 
         var account = await context.Set<Account>()
             .AsNoTracking()
             .Where(x => x.Id == request.Id)
-            .Select(x => new AccountResponse(x.Id, x.Name))
+            .Select(x => new AccountResponse(x.Id, x.Name, x.Currency))
             .SingleOrDefaultAsync(ct)
             .ConfigureAwait(false);
 

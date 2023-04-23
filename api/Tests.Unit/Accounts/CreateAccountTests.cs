@@ -1,4 +1,5 @@
 ﻿using Core.Application.Features.Accounts;
+using Core.Domain.Entities;
 using Core.Domain.Exceptions;
 using FluentAssertions;
 using NUnit.Framework;
@@ -22,7 +23,18 @@ internal sealed class CreateAccountTests : TestBase
     public async Task Handle_NameIsInvalid_BusinessException(string name)
     {
         // Arrange
-        var command = new CreateAccountCommand(name);
+        var command = new CreateAccountCommand(name, Currency.Pln);
+
+        // Act && Assert
+        var action = async () => await handler.Handle(command, CancellationToken.None);
+        await action.Should().ThrowAsync<BusinessException>();
+    }
+    
+    [Test]
+    public async Task Handle_CurrencyIsNotDefined_BusinessException()
+    {
+        // Arrange
+        var command = new CreateAccountCommand("Test name", Currency.NotDefined);
 
         // Act && Assert
         var action = async () => await handler.Handle(command, CancellationToken.None);
@@ -33,7 +45,7 @@ internal sealed class CreateAccountTests : TestBase
     public async Task Handle_AccountCreated()
     {
         // Arrange
-        var command = new CreateAccountCommand("Test name");
+        var command = new CreateAccountCommand("Test name", Currency.Pln);
 
         // Act
         await handler.Handle(command, CancellationToken.None);

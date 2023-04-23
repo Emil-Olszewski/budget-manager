@@ -10,6 +10,7 @@ internal sealed class AccountWithBalanceResponse
     public int Id { get; set; }
     public string Name { get; set; }
     public decimal Balance { get; set; }
+    public Currency Currency { get; set; }
 }
 
 public sealed record GetAllAccountsQuery : IRequest<List<AccountWithBalanceResponse>>;
@@ -31,7 +32,8 @@ internal sealed class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccount
             {
                 Id = x.Id,
                 Name = x.Name,
-                Balance = x.Transactions.Sum(y => y.TransactionDetails.Amount)
+                Balance = x.Transactions.Sum(y => y.TransactionDetails.Amount),
+                Currency = x.Currency
             })
             .ToListAsync(ct)
             .ConfigureAwait(false);

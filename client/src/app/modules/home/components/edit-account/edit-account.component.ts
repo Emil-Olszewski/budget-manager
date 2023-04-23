@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, take } from "rxjs";
-import { Account } from "../../models/account";
+import { Account, Currency } from "../../models/account";
 
 @Component({
   selector: 'app-edit-account',
@@ -10,12 +10,14 @@ import { Account } from "../../models/account";
 })
 export class EditAccountComponent implements OnInit {
   private id!: number;
+  public Currency = Currency;
   @Input() public account$!: Observable<Account>;
   @Output() public save$: EventEmitter<Account> = new EventEmitter<Account>();
   @Output() public delete$: EventEmitter<never> = new EventEmitter<never>();
   @Output() public goBack$: EventEmitter<never> = new EventEmitter<never>();
   public form: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(40)])
+    name: new FormControl('', [Validators.required, Validators.maxLength(40)]),
+    currency: new FormControl('', [Validators.required])
   });
 
   public ngOnInit(): void {
@@ -27,6 +29,7 @@ export class EditAccountComponent implements OnInit {
       .pipe(take(1))
       .subscribe(x => {
         this.form.controls['name'].setValue(x.name);
+        this.form.controls['currency'].setValue(x.currency);
         this.id = x.id;
       });
   }
@@ -38,7 +41,8 @@ export class EditAccountComponent implements OnInit {
     }
     const account: Account = {
       id: this.id,
-      name: this.form.controls['name'].value
+      name: this.form.controls['name'].value,
+      currency: +this.form.controls['currency'].value
     };
     this.save$.emit(account);
   }
