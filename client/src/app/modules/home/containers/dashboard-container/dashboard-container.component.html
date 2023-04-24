@@ -16,5 +16,12 @@
     (showDetails$)="showTransactionDetails($event)"
     (showTransferDetails$)="showTransferDetails($event)">
   </app-transactions-list>
+</div>
 
+<div class="row mt-5">
+  <app-transactions-stats
+    [transactions$]="transactions$"
+    [accounts$]="accounts$"
+    [transferTransactions$]="transferTransactions$">
+  </app-transactions-stats>
 </div>

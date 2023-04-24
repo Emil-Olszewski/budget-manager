@@ -1,0 +1,28 @@
+<h1>Statistics</h1>
+<hr>
+
+
+<ng-container *ngIf="statsModel$ | async as stats">
+  <h2>Bilans:
+    {{stats.balance | number: '1.2-2'}} PLN
+  </h2>
+  <br>
+
+  <h3>Expenses:</h3>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Tag</th>
+      <th scope="col">Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let tag of stats.tags; index as i">
+      <th scope="row">{{i+1}}</th>
+      <td>{{tag.name}}</td>
+      <td>{{tag.balance | number: '1.2-2'}} PLN ({{tag.percentageOfTotal | number: '1.2-2'}}%)</td>
+    </tr>
+    </tbody>
+  </table>
+</ng-container>
