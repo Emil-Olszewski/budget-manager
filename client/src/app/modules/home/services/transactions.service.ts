@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from "../../../core/http/api.service";
 import { Observable } from "rxjs";
 import { ApiResponse } from "../../../shared/models/api-response";
-import { CreateTransaction, Transaction, UpdateTransaction } from "../models/transaction";
+import { CreateTransaction, Transaction, TransferTransactionShort, UpdateTransaction } from "../models/transaction";
 import { CreateTransferTransaction, TransferTransaction } from '../models/transfer-transaction';
 
 @Injectable({
@@ -14,6 +14,10 @@ export class TransactionsService {
 
   public getAllTransactions(): Observable<ApiResponse<Transaction[]>> {
     return this.service.get("transactions");
+  }
+
+  public getAllTransferTransactions(): Observable<ApiResponse<TransferTransactionShort[]>>{
+    return this.service.get("transactions/transferTransactions");
   }
 
   public getTransaction(id: number): Observable<ApiResponse<Transaction>> {
