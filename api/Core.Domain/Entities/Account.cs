@@ -45,6 +45,11 @@ public sealed class Account : AuditableBaseEntity
                 throw new BusinessException("Currency must be defined");
             }
 
+            if (transactions.Any(x => x.TransactionDetails.TransactionType == TransactionType.Transfer))
+            {
+                throw new BusinessException("Currency cannot be changed when any transfer related to this account exist");
+            }
+
             currency = value;
         }
     }

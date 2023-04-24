@@ -231,6 +231,32 @@ internal sealed class UpdateTransactionTests : TestBase
     }
     
     [Test]
+    public async Task Handle_TransactionIsOfTransferType_BusinessException()
+    {
+        var accountFrom = Account.Create("account");
+        var accountTo = Account.Create("account");
+        var transaction = TransferTransaction.Create(accountFrom, accountTo, DateTime.Now, 10.0m);
+
+        Context.Add(transaction);
+        await Context.SaveChangesAsync();
+
+        var request = new UpdateTransactionCommand
+        {
+            Id = transaction.Id,
+            AccountId = accountFrom.Id,
+            Name = "Name",
+            Amount = -10.0m,
+            Date = DateTime.Now,
+            Type = TransactionType.Expense,
+            TagIds = new List<int> { 1 }
+        };
+        
+        // Act && Assert
+        var action = async () => await handler.Handle(request, CancellationToken.None);
+        await action.Should().ThrowAsync<BusinessException>();
+    }
+
+    [Test]
     [TestCase(TransactionType.NotDefined)]
     [TestCase(TransactionType.Transfer)]
     [TestCase(TransactionType.InitialBalance)]

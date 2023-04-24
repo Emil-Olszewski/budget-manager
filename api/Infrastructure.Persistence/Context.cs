@@ -10,6 +10,7 @@ namespace Infrastructure.Persistence
     {
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<TransferTransaction> TransferTransactions { get; set; }
         public DbSet<Tag> Tags { get; set; }
         
         public Context(DbContextOptions<Context> options) : base(options)

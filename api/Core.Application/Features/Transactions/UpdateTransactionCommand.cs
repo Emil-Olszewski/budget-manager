@@ -38,6 +38,11 @@ internal sealed class UpdateTransactionCommandHandler : IRequestHandler<UpdateTr
         {
             throw new BusinessException("Transaction do not exists");
         }
+
+        if (transaction.TransactionDetails.TransactionType == TransactionType.Transfer)
+        {
+            throw new BusinessException("This transaction type cannot be updated this way");
+        }
         
         var account = await context.Set<Account>()
             .Where(x => x.Id == request.AccountId)
