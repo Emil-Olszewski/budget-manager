@@ -48,8 +48,8 @@ internal sealed class GetTransferTransactionTests : TestBase
         result.AccountTo.Id.Should().Be(accountTo.Id);
         result.AccountTo.Name.Should().Be(accountTo.Name);
         result.Date.Should().Be(transaction.Input.Date);
-        result.InputAmount.Should().Be(-10.0m);
-        result.OutputAmount.Should().Be(10.0m);
+        result.InputTransaction.Amount.Should().Be(-10.0m);
+        result.OutputTransaction.Amount.Should().Be(10.0m);
         result.CurrencyConversionRate.Should().BeNull();
     }
     
@@ -69,8 +69,8 @@ internal sealed class GetTransferTransactionTests : TestBase
         // Act
         var result = await handler.Handle(request, CancellationToken.None);
 
-        result.InputAmount.Should().Be(-10.0m);
-        result.OutputAmount.Should().Be(20.0m);
+        result.InputTransaction.Amount.Should().Be(-10.0m);
+        result.OutputTransaction.Amount.Should().Be(20.0m);
         result.CurrencyConversionRate.Should().Be(2.0m);
     }
 }

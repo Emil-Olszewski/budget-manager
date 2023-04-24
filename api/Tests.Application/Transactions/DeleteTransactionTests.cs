@@ -51,6 +51,19 @@ internal sealed class DeleteTransactionTests : TestBase
     [Test]
     public async Task Handle_TransferTransaction_DeletedWithCorrespondingTransaction()
     {
-        Assert.Fail();
+        var account1 = Account.Create("Name");
+        var account2 = Account.Create("Name");
+        var transfer = TransferTransaction.Create(account1, account2, DateTime.Now, 10.0M);
+        
+        Context.Add(transfer);
+        await Context.SaveChangesAsync();
+        
+        var command = new DeleteTransactionCommand(1);
+        
+        // Act
+        await handler.Handle(command, CancellationToken.None);
+        
+        // Assert
+        Context.Transactions.Should().BeEmpty();
     }
 }

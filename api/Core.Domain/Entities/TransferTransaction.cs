@@ -85,6 +85,11 @@ public class TransferTransaction : BaseEntity
     public static TransferTransaction Create(Account from, Account to, DateTime date, decimal amount,
         decimal? currencyConversionRate = null)
     {
+        if (from == to)
+        {
+            throw new BusinessException("Cannot transfer within one account");
+        }
+        
         if (from.Currency != to.Currency && currencyConversionRate is null)
         {
             throw new BusinessException(
