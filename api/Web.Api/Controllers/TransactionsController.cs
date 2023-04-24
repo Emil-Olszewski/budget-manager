@@ -49,6 +49,12 @@ public class TransactionsController : BaseController
         return Ok();
     }
 
+    [HttpGet("TransferTransactions")]
+    public async Task<IActionResult> GetAllTransferTransactions(CancellationToken ct)
+    {
+        return Ok(await Mediator.Send(new GetAllTransferTransactionsQuery(), ct).ConfigureAwait(false));
+    }
+
     [HttpGet("TransferTransactions/{id}")]
     public async Task<IActionResult> GetTransferTransaction(int id, CancellationToken ct)
     {

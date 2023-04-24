@@ -20,20 +20,22 @@
   <tbody>
     <ng-container *ngIf="transactions$ | async as transactions">
       <ng-container *ngIf="accounts$ | async as accounts">
-        <tr *ngFor="let transaction of transactions" (click)="showDetails(transaction)" class="clickable">
-          <td>{{getAccountName(transaction.accountId, accounts)}}</td>
-          <td>{{transaction.name}}</td>
-          <td [ngClass]="getColorForType(transaction.type)">
-            {{transaction.amount | number: '1.2'}}
-            {{getAccountCurrency(transaction.accountId, accounts) | currencyName }}
-          </td>
-          <td>{{transaction.date | date: 'dd-MM-yyyy'}}</td>
-          <td>
-            <span *ngFor="let tag of transaction.tags" class="badge bg-primary">
-              {{tag.name}}
-            </span>
-          </td>
-        </tr>
+        <ng-container *ngIf="transferTransactions$ | async as transferTransactions">
+          <tr *ngFor="let transaction of transactions" (click)="showDetails(transaction, transferTransactions)" class="clickable">
+            <td>{{getAccountName(transaction.accountId, accounts)}}</td>
+            <td>{{getTransactionName(transaction, transferTransactions, accounts)}}</td>
+            <td [ngClass]="getColorForType(transaction.type)">
+              {{transaction.amount | number: '1.2'}}
+              {{getAccountCurrency(transaction.accountId, accounts) | currencyName }}
+            </td>
+            <td>{{transaction.date | date: 'dd-MM-yyyy'}}</td>
+            <td>
+              <span *ngFor="let tag of transaction.tags" class="badge bg-primary">
+                {{tag.name}}
+              </span>
+            </td>
+          </tr>
+          </ng-container>
       </ng-container>
     </ng-container>
   </tbody>

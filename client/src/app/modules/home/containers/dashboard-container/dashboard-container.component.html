@@ -3,7 +3,7 @@
     [accounts$]="accounts$"
     (showDetails$)="showAccountDetails($event)"
     (addAccount$)="addAccount()"
-    (transfer$)="transfer()">
+    (transfer$)="addTransfer">
   </app-accounts-list>
 </div>
 
@@ -11,8 +11,10 @@
   <app-transactions-list
     [transactions$]="transactions$"
     [accounts$]="accounts$"
+    [transferTransactions$]="transferTransactions$"
     (addTransaction$)="addTransaction()"
-    (showDetails$)="showTransactionDetails($event)">
+    (showDetails$)="showTransactionDetails($event)"
+    (showTransferDetails$)="showTransferDetails($event)">
   </app-transactions-list>
 
 </div>

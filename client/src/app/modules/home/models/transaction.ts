@@ -34,4 +34,10 @@ export interface UpdateTransaction extends CreateTransaction {
   id: number;
 }
 
-
+export interface TransferTransactionShort {
+  id: number;
+  accountFromId: number;
+  accountToId: number;
+  inputTransactionId: number;
+  outputTransactionId: number;
+}
