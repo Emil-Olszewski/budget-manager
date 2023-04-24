@@ -19,6 +19,9 @@ import { EditTransactionPageComponent } from './pages/edit-transaction-page/edit
 import { EditTransactionContainerComponent } from './containers/edit-transaction-container/edit-transaction-container.component';
 import { EditTransactionComponent } from './components/edit-transaction/edit-transaction.component';
 import { TransactionsListComponent } from './components/transactions-list/transactions-list.component';
+import { EditTransferPageComponent } from './pages/edit-transfer-page/edit-transfer-page.component';
+import { EditTransferContainerComponent } from './containers/edit-transfer-container/edit-transfer-container.component';
+import { EditTransferComponent } from './components/edit-transfer/edit-transfer.component';
 
 
 
@@ -40,6 +43,9 @@ import { TransactionsListComponent } from './components/transactions-list/transa
     EditTransactionContainerComponent,
     EditTransactionComponent,
     TransactionsListComponent,
+    EditTransferPageComponent,
+    EditTransferContainerComponent,
+    EditTransferComponent,
   ],
   imports: [
     CommonModule,

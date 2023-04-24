@@ -18,6 +18,7 @@ namespace Infrastructure.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Currency = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -95,6 +96,32 @@ namespace Infrastructure.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TransferTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InputId = table.Column<int>(type: "int", nullable: false),
+                    OutputId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CurrencyConversionRate = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransferTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TransferTransactions_Transactions_InputId",
+                        column: x => x.InputId,
+                        principalTable: "Transactions",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TransferTransactions_Transactions_OutputId",
+                        column: x => x.OutputId,
+                        principalTable: "Transactions",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_ParentId",
                 table: "Tags",
@@ -109,6 +136,16 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_Transactions_AccountId",
                 table: "Transactions",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransferTransactions_InputId",
+                table: "TransferTransactions",
+                column: "InputId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransferTransactions_OutputId",
+                table: "TransferTransactions",
+                column: "OutputId");
         }
 
         /// <inheritdoc />
@@ -116,6 +153,9 @@ namespace Infrastructure.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "TagTransaction");
+
+            migrationBuilder.DropTable(
+                name: "TransferTransactions");
 
             migrationBuilder.DropTable(
                 name: "Tags");

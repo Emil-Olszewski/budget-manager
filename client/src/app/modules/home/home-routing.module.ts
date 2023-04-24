@@ -5,8 +5,10 @@ import { EditAccountPageComponent } from "./pages/edit-account-page/edit-account
 import { TagsPageComponent } from "./pages/tags-page/tags-page.component";
 import { EditTagPageComponent } from "./pages/edit-tag-page/edit-tag-page.component";
 import { EditTransactionPageComponent } from "./pages/edit-transaction-page/edit-transaction-page.component";
+import { EditTransferPageComponent } from './pages/edit-transfer-page/edit-transfer-page.component';
 
 const routes: Routes = [
+  { path: 'transfers/edit/:id', component: EditTransferPageComponent },
   { path: 'transactions/edit/:id', component: EditTransactionPageComponent },
   { path: 'tags/edit/:id', component: EditTagPageComponent },
   { path: 'tags', component: TagsPageComponent },

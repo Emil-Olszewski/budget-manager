@@ -11,4 +11,5 @@ export class AccountsListComponent {
   @Input() public accounts$!: Observable<Account[]>;
   @Output() public showDetails$: EventEmitter<number> = new EventEmitter<number>();
   @Output() public addAccount$: EventEmitter<never> = new EventEmitter<never>();
+  @Output() public transfer$: EventEmitter<never> = new EventEmitter<never>();
 }

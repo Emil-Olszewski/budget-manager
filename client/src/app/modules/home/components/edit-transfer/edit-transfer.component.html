@@ -1,0 +1,85 @@
+<div class="card">
+  <div class="card-body">
+    <div>
+      <h1>
+        <ng-container *ngIf="transfer$ | async; else create">
+          Edit
+        </ng-container>
+        <ng-template #create>
+          Create
+        </ng-template>
+        transfer
+      </h1>
+      <div class="mt-3">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <div>
+            <label for="accountFromId" class="form-label">Account from</label>
+            <ng-container *ngIf="accounts$ | async as accounts">
+              <select class="form-select" id="accountFromId"
+                      formControlName="accountFromId"
+                      formControlValidation="form.controls['accountFromId']">
+                <option *ngFor="let account of accounts" [value]="account.id" >{{account.name}}</option>
+              </select>
+            </ng-container>
+            <app-form-control-validation-error [control]="form.controls['accountFromId']">
+            </app-form-control-validation-error>
+          </div>
+          <div>
+            <label for="accountToId" class="form-label">Account to</label>
+            <ng-container *ngIf="accounts$ | async as accounts">
+              <select class="form-select" id="accountToId"
+                      formControlName="accountToId"
+                      formControlValidation="form.controls['accountToId']">
+                <option *ngFor="let account of accounts" [value]="account.id" >{{account.name}}</option>
+              </select>
+            </ng-container>
+            <app-form-control-validation-error [control]="form.controls['accountToId']">
+            </app-form-control-validation-error>
+          </div>
+          <div>
+            <label for="amount" class="form-label">Amount</label>
+            <input class="form-control"
+                   id="amount"
+                   type="number"
+                   placeholder="Enter amount"
+                   formControlName="amount"
+                   formControlValidation="form.controls['amount']">
+            <app-form-control-validation-error [control]="form.controls['amount']">
+            </app-form-control-validation-error>
+          </div>
+          <div>
+            <label for="currencyConversionRate" class="form-label">Amount</label>
+            <input class="form-control"
+                   id="currencyConversionRate"
+                   type="number"
+                   placeholder="Enter currency conversion rate"
+                   formControlName="currencyConversionRate"
+                   formControlValidation="form.controls['currencyConversionRate']">
+            <app-form-control-validation-error [control]="form.controls['currencyConversionRate']">
+            </app-form-control-validation-error>
+          </div>
+          <div>
+            <label for="date" class="form-label">Date</label>
+            <input class="form-control"
+                   id="date"
+                   type="date"
+                   placeholder="Enter date"
+                   formControlName="date"
+                   formControlValidation="form.controls['date']">
+            <app-form-control-validation-error [control]="form.controls['date']">
+            </app-form-control-validation-error>
+          </div>
+          <div class="row justify-content-around mt-3">
+            <div class="col">
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            <div class="col text-end">
+              <button type="button" class="btn btn-outline-primary" (click)="goBack$.emit()">Go back</button> &nbsp;
+              <button *ngIf="transfer$ | async" type="button" class="btn btn-danger" (click)="delete$.emit()">Delete</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

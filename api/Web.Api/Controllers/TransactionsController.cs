@@ -48,4 +48,29 @@ public class TransactionsController : BaseController
         await Mediator.Send(new DeleteTransactionCommand(id), ct).ConfigureAwait(false);
         return Ok();
     }
+
+    [HttpGet("TransferTransactions/{id}")]
+    public async Task<IActionResult> GetTransferTransaction(int id, CancellationToken ct)
+    {
+        return Ok(await Mediator.Send(new GetTransferTransactionQuery(id), ct).ConfigureAwait(false));
+    }
+
+    [HttpPost("TransferTransactions")]
+    public async Task<IActionResult> CreateTransferTransaction([FromBody] CreateTransferTransactionCommand request, CancellationToken ct)
+    {
+        await Mediator.Send(request, ct).ConfigureAwait(false);
+        return Ok();
+    }
+
+    [HttpPut("TransferTransactions/{id}")]
+    public async Task<IActionResult> UpdateTransferTransaction(int id, [FromBody] UpdateTransferTransactionCommand request, CancellationToken ct)
+    {
+        if (id != request.Id)
+        {
+            throw new ArgumentException("Provided ids are different");
+        }
+
+        await Mediator.Send(request, ct).ConfigureAwait(false);
+        return Ok();
+    }
 }

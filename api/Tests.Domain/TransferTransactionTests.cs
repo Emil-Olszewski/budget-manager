@@ -59,7 +59,19 @@ internal sealed class TransferTransactionTests
         var action = () => TransferTransaction.Create(accountFrom, accountTo, DateTime.Now, 10.0M);
         action.Should().Throw<BusinessException>();
     }
-    
+
+    [Test]
+    public void Create_SameAccountProvided_BusinessException()
+    {
+        // Arrange
+        var accountFrom = Account.Create("Name");
+
+        // Act && Assert 
+        var action = () => TransferTransaction.Create(accountFrom, accountFrom, DateTime.Now, 10.0M);
+        action.Should().Throw<BusinessException>();
+    }
+
+
     [Test]
     public void Create_TransferTransactionReturned()
     {

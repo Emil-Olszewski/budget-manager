@@ -44,4 +44,8 @@ export class DashboardContainerComponent implements OnInit {
   public showTransactionDetails(id: number): void {
     this.router.navigate(['transactions', 'edit', id]);
   }
+
+  public transfer(): void {
+    this.router.navigate(['transfers', 'edit', 0]);
+    }
 }

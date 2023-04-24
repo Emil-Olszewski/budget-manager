@@ -42,6 +42,7 @@ internal sealed class GetTransferTransactionTests : TestBase
         // Act
         var result = await handler.Handle(request, CancellationToken.None);
 
+        result.Id.Should().Be(1);
         result.AccountFrom.Id.Should().Be(accountFrom.Id);
         result.AccountFrom.Name.Should().Be(accountFrom.Name);
         result.AccountTo.Id.Should().Be(accountTo.Id);

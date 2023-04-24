@@ -6,25 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Features.Transactions;
 
-internal sealed class TransferTransactionAccountResponse
-{
-    public int Id { get; set; }
+internal sealed record TransferTransactionAccountResponse(int Id, string Name);
 
-    public string Name { get; set; }
-
-    public TransferTransactionAccountResponse(int id, string name)
-    {
-        Id = id;
-        Name = name;
-    }
-}
+internal sealed record TransferTransactionTransactionResponse(int Id, decimal Amount);
 
 internal sealed class TransferTransactionResponse
 {
+    public int Id { get; set; }
     public TransferTransactionAccountResponse AccountFrom { get; set; }
     public TransferTransactionAccountResponse AccountTo { get; set; }
-    public decimal InputAmount { get; set; }
-    public decimal OutputAmount { get; set; }
+    public TransferTransactionTransactionResponse InputTransaction { get; set; }
+    public TransferTransactionTransactionResponse OutputTransaction { get; set; }
     public decimal? CurrencyConversionRate { get; set; }
     public DateTime Date { get; set; }
 }
@@ -58,10 +50,11 @@ internal sealed class GetTransferTransactionQueryHandler : IRequestHandler<GetTr
         
         return new TransferTransactionResponse
         {
+            Id = transfer.Id,
             AccountFrom = new TransferTransactionAccountResponse(transfer.Input.Account.Id, transfer.Input.Account.Name),
             AccountTo = new TransferTransactionAccountResponse(transfer.Output.Account.Id, transfer.Output.Account.Name),
-            InputAmount = transfer.Input.TransactionDetails.Amount,
-            OutputAmount = transfer.Output.TransactionDetails.Amount,
+            InputTransaction = new TransferTransactionTransactionResponse(transfer.Input.Id, transfer.Input.TransactionDetails.Amount),
+            OutputTransaction = new TransferTransactionTransactionResponse(transfer.Output.Id, transfer.Output.TransactionDetails.Amount),
             CurrencyConversionRate = transfer.CurrencyConversionRate,
             Date = transfer.Input.Date,
         };

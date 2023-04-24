@@ -20,7 +20,7 @@
   <tbody>
     <ng-container *ngIf="transactions$ | async as transactions">
       <ng-container *ngIf="accounts$ | async as accounts">
-        <tr *ngFor="let transaction of transactions" (click)="showDetails$.emit(transaction.id)" class="clickable">
+        <tr *ngFor="let transaction of transactions" (click)="showDetails(transaction)" class="clickable">
           <td>{{getAccountName(transaction.accountId, accounts)}}</td>
           <td>{{transaction.name}}</td>
           <td [ngClass]="getColorForType(transaction.type)">

@@ -13,6 +13,7 @@ export class TransactionsListComponent {
   @Input() public accounts$!: Observable<Account[]>;
   @Output() public addTransaction$: EventEmitter<never> = new EventEmitter<never>();
   @Output() public showDetails$: EventEmitter<number> = new EventEmitter<number>();
+  @Output() public showTransferDetails$: EventEmitter<number> = new EventEmitter<number>();
 
   public getColorForType(type: TransactionType): string {
     switch (type) {
@@ -31,5 +32,10 @@ export class TransactionsListComponent {
 
   public getAccountCurrency(accountId: number, accounts: Account[]): Currency {
     return accounts.filter(x => x.id == accountId)[0].currency;
+  }
+
+  public showDetails(transaction: Transaction): void {
+    if (transaction.type === TransactionType.transfer) {
+    }
   }
 }

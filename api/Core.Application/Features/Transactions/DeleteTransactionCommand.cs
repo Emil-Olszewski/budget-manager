@@ -29,7 +29,24 @@ internal sealed class DeleteTransactionCommandHandler : IRequestHandler<DeleteTr
             throw new BusinessException("Transaction do not exists");
         }
 
-        context.Remove(transaction);
+        if (transaction.TransactionDetails.TransactionType == TransactionType.Transfer)
+        {
+            var transfer = await context.Set<TransferTransaction>()
+                .Include(x => x.Input)
+                .Include(x => x.Output)
+                .Where(x => x.Input.Id == request.Id || x.Output.Id == request.Id)
+                .SingleAsync(ct)
+                .ConfigureAwait(false);
+
+            context.Remove(transfer);
+            context.Remove(transfer.Input);
+            context.Remove(transfer.Output);
+        }
+        else
+        {
+            context.Remove(transaction);
+        }
+
         await context.SaveChangesAsync(ct).ConfigureAwait(false);
     }
 }

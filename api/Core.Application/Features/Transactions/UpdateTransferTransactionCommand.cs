@@ -26,6 +26,8 @@ internal sealed class UpdateTransferTransactionCommandHandler : IRequestHandler<
     public async Task Handle(UpdateTransferTransactionCommand request, CancellationToken ct)
     {
         var transfer = await context.Set<TransferTransaction>()
+            .Include(x => x.Input)
+            .Include(x => x.Output)
             .Where(x => x.Id == request.Id)
             .SingleOrDefaultAsync(ct)
             .ConfigureAwait(false);

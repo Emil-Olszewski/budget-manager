@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230423181434_Currency")]
-    partial class Currency
+    [Migration("20230424130208_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,6 +107,35 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Transactions");
                 });
 
+            modelBuilder.Entity("Core.Domain.Entities.TransferTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("CurrencyConversionRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("InputId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OutputId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InputId");
+
+                    b.HasIndex("OutputId");
+
+                    b.ToTable("TransferTransactions");
+                });
+
             modelBuilder.Entity("TagTransaction", b =>
                 {
                     b.Property<int>("TagsId")
@@ -164,6 +193,25 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("TransactionDetails")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Domain.Entities.TransferTransaction", b =>
+                {
+                    b.HasOne("Core.Domain.Entities.Transaction", "Input")
+                        .WithMany()
+                        .HasForeignKey("InputId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Core.Domain.Entities.Transaction", "Output")
+                        .WithMany()
+                        .HasForeignKey("OutputId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Input");
+
+                    b.Navigation("Output");
                 });
 
             modelBuilder.Entity("TagTransaction", b =>
