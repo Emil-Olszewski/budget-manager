@@ -1,28 +1,35 @@
-<h1>Statistics</h1>
-<hr>
+<div class="card p-3 border-0">
+  <div class="mb-3">
+    <h1>Statistics</h1>
+  </div>
+  <ng-container *ngIf="statsModel$ | async as stats">
+    <h3>Balance:
+      <span [ngClass]="stats.balance > 0 ? 'text-success': 'text-danger'">
+      {{stats.balance | number: '1.2-2'}} PLN
+      </span>
+    </h3>
+    <br>
 
-
-<ng-container *ngIf="statsModel$ | async as stats">
-  <h2>Bilans:
-    {{stats.balance | number: '1.2-2'}} PLN
-  </h2>
-  <br>
-
-  <h3>Expenses:</h3>
-  <table class="table">
-    <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Tag</th>
-      <th scope="col">Amount</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let tag of stats.tags; index as i">
-      <th scope="row">{{i+1}}</th>
-      <td>{{tag.name}}</td>
-      <td>{{tag.balance | number: '1.2-2'}} PLN ({{tag.percentageOfTotal | number: '1.2-2'}}%)</td>
-    </tr>
-    </tbody>
-  </table>
-</ng-container>
+    <table class="table mt-3">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Tag</th>
+        <th scope="col">Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let tag of stats.tags; index as i">
+        <th scope="row">{{i+1}}</th>
+        <td>{{tag.name}}</td>
+        <td>
+          <span [ngClass]="tag.balance > 0 ? 'text-success': 'text-danger'">
+            {{tag.balance | number: '1.2-2'}} PLN
+          </span>
+          ({{tag.percentageOfTotal | number: '1.2-2'}}%)
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</div>

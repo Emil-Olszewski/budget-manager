@@ -18,7 +18,7 @@ internal sealed class GetAllTransactionQueryHandler : IRequestHandler<GetAllTran
     
     public async Task<List<TransactionResponse>> Handle(GetAllTransactionsQuery request, CancellationToken ct)
     {
-        return await context.Set<Transaction>()
+        var result = await context.Set<Transaction>()
             .AsNoTracking()
             .Include(x => x.Account)
             .Include(x => x.Tags).ThenInclude(x => x.Parent)
@@ -26,6 +26,8 @@ internal sealed class GetAllTransactionQueryHandler : IRequestHandler<GetAllTran
             .Select(x => TransactionResponse.MapFrom(x))
             .ToListAsync(ct)
             .ConfigureAwait(false);
+        
+        return result.OrderByDescending(x => x.Date).ToList();
     }
 }
 

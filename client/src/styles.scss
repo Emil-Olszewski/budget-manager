@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+
+$primary: #284b63;
+$light: #E9EBEC;
+
 /* Importing Bootstrap SCSS file. */
 @import "./node_modules/bootstrap/scss/bootstrap";
 
@@ -8,4 +12,12 @@
 
 .clickable {
   cursor: pointer;
+}
+
+body {
+  background-color: #E9EBEC;
+}
+
+.card {
+  border: none;
 }

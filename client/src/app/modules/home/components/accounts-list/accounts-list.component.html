@@ -1,29 +1,29 @@
-<h1>Accounts</h1>
-<hr>
-<ng-container *ngIf="accounts$ | async as accounts">
-  <div class="row">
-    <div *ngFor="let account of accounts$ | async" class=" col-3">
-      <div class="card card-body">
-        <h3>{{account.name}}</h3>
-        {{account.balance | number: '1.2-2'}} {{account.currency | currencyName}} <br>
-        <button class="btn btn-sm btn-primary" (click)="showDetails$.emit(account.id)">
-          Details
-        </button>
+<div class="card p-3 border-0">
+  <div class="mb-3">
+    <h1>Accounts</h1>
+  </div>
+  <ng-container *ngIf="accounts$ | async as accounts">
+    <div class="row">
+      <div *ngFor="let account of accounts$ | async" class=" col-3">
+        <div class="card card-body bg-light">
+          <h5>{{account.name}}</h5>
+          <span class="text-secondary">
+          {{account.balance | number: '1.2-2'}} {{account.currency | currencyName}} <br>
+          </span>
+          <button class="btn btn-sm btn-primary mt-3" (click)="showDetails$.emit(account.id)">
+            Show details
+          </button>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card card-body h-100 justify-content-end bg-light">
+          <h3 class="text-secondary text-center">+</h3>
+          <button class="btn btn-sm btn-primary" (click)="addAccount$.emit()">Add account</button>
+        </div>
       </div>
     </div>
-    <div class="col-3">
-      <div class="card card-body h-100 justify-content-end">
-        <h3 class="text-secondary text-center">+</h3>
-        <button class="btn btn-sm btn-primary" (click)="addAccount$.emit()">Add account</button>
-      </div>
+    <div class="row mt-3">
+        <button class="btn btn-primary" (click)="transfer$.emit()">Transfer between accounts</button>
     </div>
-  </div>
-  <div class="row mt-3">
-    <div class="col">
-      <button class="btn btn-primary" (click)="transfer$.emit()">Transfer</button>
-    </div>
-  </div>
-</ng-container>
-
-
-
+  </ng-container>
+</div>

@@ -56,6 +56,7 @@ export class DashboardContainerComponent implements OnInit {
   }
 
   public showTransferDetails(id: number): void {
+    console.log('nav');
     this.router.navigate(['transfers', 'edit', id]);
   }
 }

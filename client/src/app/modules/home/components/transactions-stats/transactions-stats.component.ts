@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { combineLatestWith, Observable, ReplaySubject, take } from "rxjs";
-import { Transaction, TransferTransactionShort } from "../../models/transaction";
-import { Account, Currency } from "../../models/account";
-import { StatsModel, StatsModelTag } from "./stats-model";
+import {Component, Input, OnInit} from '@angular/core';
+import {combineLatestWith, Observable, ReplaySubject, take} from "rxjs";
+import {Transaction, TransactionType, TransferTransactionShort} from "../../models/transaction";
+import {Account, Currency} from "../../models/account";
+import {StatsModel, StatsModelTag} from "./stats-model";
 
 @Component({
   selector: 'app-transactions-stats',
@@ -27,18 +27,22 @@ export class TransactionsStatsComponent implements OnInit {
 
     const model: StatsModel = new StatsModel();
 
-    transactions.forEach(transaction => {
+    transactions.filter(x => x.type !== TransactionType.transfer).forEach(transaction => {
       const account = accounts.find(x => x.id === transaction.accountId)!;
       model.balance += this.convertToPln(transaction.amount, account.currency);
       transaction.amount;
     });
 
+    const expensesBalance = transactions.filter(x => x.type === TransactionType.expense)
+      .reduce((acc, curr) => acc + this.convertToPln(curr.amount, accounts.find(x => x.id === curr.accountId)!.currency), 0);
+
     const transactionsPerTagPerAccount: Map<number, Map<number, Transaction[]>> = new Map<number, Map<number, Transaction[]>>();
     accounts.forEach(account => {
       const transactionsPerTag: Map<number, Transaction[]> = new Map<number, Transaction[]>();
-      transactions.filter(x => x.accountId === account.id).forEach(transaction => {
+      transactions.filter(x => x.accountId === account.id)
+        .filter(x => x.type === TransactionType.expense)
+        .forEach(transaction => {
         transaction.tags.forEach(tag => {
-          console.log(tag);
           if (!transactionsPerTag.has(tag.id)) {
             transactionsPerTag.set(tag.id, []);
           }
@@ -64,8 +68,10 @@ export class TransactionsStatsComponent implements OnInit {
     });
 
     model.tags.forEach(tag => {
-      tag.percentageOfTotal = tag.balance / model.balance * 100;
+      tag.percentageOfTotal = tag.balance / expensesBalance * 100;
     });
+
+    model.tags.sort((a, b) => a.balance - b.balance);
 
     this.statsModel$.next(model);
   }
