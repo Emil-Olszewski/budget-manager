@@ -75,6 +75,11 @@ public sealed class Transaction : AuditableBaseEntity
         get => transactionDetails;
         set
         {
+            if (transactionDetails is null)
+            {
+                transactionDetails = value;
+            }
+            
             if (transactionDetails.TransactionType != value.TransactionType)
             {
                 if (tags.Any())
@@ -110,7 +115,7 @@ public sealed class Transaction : AuditableBaseEntity
         {
             Account = account,
             Name = name,
-            transactionDetails = transactionDetails,
+            TransactionDetails = transactionDetails,
             Date = dateTime
         };
     }
@@ -120,7 +125,7 @@ public sealed class Transaction : AuditableBaseEntity
         return new Transaction
         {
             Name = "Initial balance",
-            transactionDetails = new TransactionDetails(amount, TransactionType.InitialBalance),
+            TransactionDetails = new TransactionDetails(amount, TransactionType.InitialBalance),
             Date = new DateTime(),
         };
     }
