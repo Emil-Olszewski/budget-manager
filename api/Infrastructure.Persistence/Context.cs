@@ -43,6 +43,17 @@ namespace Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<TransferTransaction>()
+                .HasOne(x => x.Input)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<TransferTransaction>()
+                .HasOne(x => x.Output)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
+
             builder.Entity<Transaction>()
                 .OwnsOne(x => x.TransactionDetails, x =>
                 {
@@ -50,7 +61,6 @@ namespace Infrastructure.Persistence
                     x.Property(y => y.TransactionType).HasColumnName("TransactionType");
                 });
             
-            base.OnModelCreating(builder);
         }
     }
 }
