@@ -27,15 +27,15 @@
               <td>
                 {{getTransactionName(transaction, transferTransactions, accounts)}}
                 <ng-container *ngFor="let tag of transaction.tags" >
-                  <span class="badge bg-primary">
+                  <span class="badge bg-secondary">
                     {{tag.name}}
                   </span>
                   &nbsp;
                 </ng-container>
               </td>
               <td [ngClass]="getColorForType(transaction.type)">
-                {{transaction.amount | number: '1.2'}}
-                {{getAccountCurrency(transaction.accountId, accounts) | currencyName }}
+                <ng-container *ngIf="transaction.amount > 0">+</ng-container>{{transaction.amount | number: '1.2'}}
+                {{getAccountCurrency(transaction.accountId, accounts) | CurrencyCode }}
               </td>
               <td>{{transaction.date | date: 'dd-MM-yyyy'}}</td>
             </tr>
@@ -46,5 +46,4 @@
     </table>
   </ng-template>
   <button class="btn btn-primary" (click)="addTransaction$.emit()">Add transaction</button>
-
 </div>

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, take } from "rxjs";
 import { AccountWithInitialBalance, Currency, UpdateAccount } from "../../models/account";
+import { CurrencyCodePipe } from "../../../../shared/pipes/currency-code.pipe";
 
 @Component({
   selector: 'app-edit-account',
@@ -49,4 +50,6 @@ export class EditAccountComponent implements OnInit {
     };
     this.save$.emit(account);
   }
+
+  protected readonly CurrencyCodePipe = CurrencyCodePipe;
 }

@@ -13,5 +13,8 @@
     <li *ngIf="control.touched && control.errors?.['min']" class="text-danger">
         Minimum value is {{control.errors?.['min'].min}}
     </li>
+    <li *ngIf="control.touched && control.errors?.['sameValue']" class="text-danger">
+      Values must differ
+    </li>
   </ul>
 </div>

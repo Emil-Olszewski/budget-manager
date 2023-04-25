@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { FormControlValidationErrorComponent } from './components/form-control-validation-error/form-control-validation-error.component';
 import { FormControlValidationDirective } from './directives/form-control-validation.directive';
-import { CurrencyNamePipe } from './pipes/currency-name.pipe';
-
+import { CurrencyCodeDirective } from './directives/currency-code.directive';
+import { CurrencyCodePipe } from "./pipes/currency-code.pipe";
 
 
 @NgModule({
@@ -12,14 +12,16 @@ import { CurrencyNamePipe } from './pipes/currency-name.pipe';
     ErrorMessageComponent,
     FormControlValidationErrorComponent,
     FormControlValidationDirective,
-    CurrencyNamePipe,
+    CurrencyCodeDirective,
+    CurrencyCodePipe
     ],
-  exports: [
-    ErrorMessageComponent,
-    FormControlValidationErrorComponent,
-    FormControlValidationDirective,
-    CurrencyNamePipe
-  ],
+    exports: [
+        ErrorMessageComponent,
+        FormControlValidationErrorComponent,
+        FormControlValidationDirective,
+        CurrencyCodeDirective,
+        CurrencyCodePipe
+    ],
   imports: [
     CommonModule
   ]

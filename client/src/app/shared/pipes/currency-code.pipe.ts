@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Currency } from "../../modules/home/models/account";
 
 @Pipe({
-  name: 'currencyName'
+  name: 'CurrencyCode'
 })
-export class CurrencyNamePipe implements PipeTransform {
+export class CurrencyCodePipe implements PipeTransform {
   transform(value: Currency): string {
     switch (value) {
       case Currency.pln:

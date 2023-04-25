@@ -8,7 +8,7 @@
         <div class="card card-body bg-light">
           <h5>{{account.name}}</h5>
           <span class="text-secondary">
-          {{account.balance | number: '1.2-2'}} {{account.currency | currencyName}} <br>
+          {{account.balance | number: '1.2-2'}} {{account.currency | CurrencyCode }} <br>
           </span>
           <button class="btn btn-sm btn-primary mt-3" (click)="showDetails$.emit(account.id)">
             Show details

@@ -37,7 +37,10 @@ export class TransactionsListComponent {
     }
 
     const transfer = transferTransactions.find(x => x.inputTransactionId == transaction.id || x.outputTransactionId == transaction.id);
-    return `From: ${this.getAccountName(transfer!.accountFromId, accounts)} To: ${this.getAccountName(transfer!.accountToId, accounts)}`
+    if (transaction.amount < 0) {
+      return `To ${this.getAccountName(transfer!.accountToId, accounts)}`
+    }
+    return `From ${this.getAccountName(transfer!.accountFromId, accounts)}`
   }
 
   public getAccountCurrency(accountId: number, accounts: Account[]): Currency {

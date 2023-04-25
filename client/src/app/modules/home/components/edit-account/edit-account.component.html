@@ -28,9 +28,9 @@
             <select class="form-select" id="currency"
                     formControlName="currency"
                     formControlValidation="form.controls['currency']">
-              <option selected [value]="Currency.pln">{{Currency.pln | currencyName}}</option>
-              <option [value]="Currency.eur">{{Currency.eur | currencyName}}</option>
-              <option [value]="Currency.usd">{{Currency.usd | currencyName}}</option>
+              <option selected [value]="Currency.pln">{{Currency.pln | CurrencyCode }}</option>
+              <option [value]="Currency.eur">{{Currency.eur | CurrencyCode }}</option>
+              <option [value]="Currency.usd">{{Currency.usd | CurrencyCode }}</option>
             </select>
             <app-form-control-validation-error [control]="form.controls['currency']">
             </app-form-control-validation-error>
