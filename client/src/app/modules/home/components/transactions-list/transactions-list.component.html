@@ -5,6 +5,7 @@
   <ng-container *ngIf="transactions$ | async as transactions">
     <ng-container *ngIf="transactions.length === 0; else transactionsList">
       You have no transactions yet.
+      <div class="mb-3"></div>
     </ng-container>
   </ng-container>
 
