@@ -12,12 +12,28 @@ import { CreateTransferTransaction, TransferTransaction } from '../models/transf
 export class TransactionsService {
   public constructor(private service: ApiService) { }
 
-  public getAllTransactions(): Observable<ApiResponse<Transaction[]>> {
-    return this.service.get("transactions");
+  public getAllTransactions(from?: Date, to?: Date): Observable<ApiResponse<Transaction[]>> {
+    let path = 'transactions';
+    if (from && to) {
+      path += `?from=${from.toISOString()}&to=${to.toISOString()}`;
+    } else if (from) {
+      path += `?from=${from.toISOString()}`;
+    } else if (to) {
+      path += `?to=${to.toISOString()}`;
+    }
+    return this.service.get(path);
   }
 
-  public getAllTransferTransactions(): Observable<ApiResponse<TransferTransactionShort[]>>{
-    return this.service.get("transactions/transferTransactions");
+  public getAllTransferTransactions(from?: Date, to?: Date): Observable<ApiResponse<TransferTransactionShort[]>>{
+    let path = 'transactions/transferTransactions';
+    if (from && to) {
+      path += `?from=${from.toISOString()}&to=${to.toISOString()}`;
+    } else if (from) {
+      path += `?from=${from.toISOString()}`;
+    } else if (to) {
+      path += `?to=${to.toISOString()}`;
+    }
+    return this.service.get(path);
   }
 
   public getTransaction(id: number): Observable<ApiResponse<Transaction>> {

@@ -11,8 +11,16 @@ import { Account, AccountWithInitialBalance, CreateAccount, UpdateAccount } from
 export class AccountsService {
   public constructor(private service: ApiService) { }
 
-  public getAllAccounts(): Observable<ApiResponse<Account[]>> {
-    return this.service.get("accounts");
+  public getAllAccounts(from?: Date, to?: Date): Observable<ApiResponse<Account[]>> {
+    let path = 'accounts';
+    if (from && to) {
+      path += `?from=${from.toISOString()}&to=${to.toISOString()}`;
+    } else if (from) {
+      path += `?from=${from.toISOString()}`;
+    } else if (to) {
+      path += `?to=${to.toISOString()}`;
+    }
+    return this.service.get(path);
   }
 
   public getAccount(id: number): Observable<ApiResponse<AccountWithInitialBalance>> {

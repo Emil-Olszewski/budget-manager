@@ -12,9 +12,9 @@ public class AccountsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllAccounts(CancellationToken ct)
+    public async Task<IActionResult> GetAllAccounts([FromQuery] GetAllAccountsQuery request, CancellationToken ct)
     {
-        return Ok(await Mediator.Send(new GetAllAccountsQuery(), ct).ConfigureAwait(false));
+        return Ok(await Mediator.Send(request, ct).ConfigureAwait(false));
     }
 
     [HttpGet("{id}")]

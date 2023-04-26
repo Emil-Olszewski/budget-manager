@@ -14,7 +14,11 @@ internal sealed class TransferTransactionShortResponse
     public int OutputTransactionId { get; set; }
 }
 
-public sealed record GetAllTransferTransactionsQuery : IRequest<List<TransferTransactionShortResponse>>;
+public sealed record GetAllTransferTransactionsQuery : IRequest<List<TransferTransactionShortResponse>>
+{
+    public DateTime From { get; init; }
+    public DateTime To { get; init; }
+}
 
 internal sealed class GetAllTransferTransactionsQueryHandler : IRequestHandler<GetAllTransferTransactionsQuery, List<TransferTransactionShortResponse>>
 {
@@ -27,8 +31,20 @@ internal sealed class GetAllTransferTransactionsQueryHandler : IRequestHandler<G
 
     public async Task<List<TransferTransactionShortResponse>> Handle(GetAllTransferTransactionsQuery request, CancellationToken ct)
     {
-        return await context.Set<TransferTransaction>()
-           .AsNoTracking()
+        var query = context.Set<TransferTransaction>()
+            .AsNoTracking();
+
+        if (request.From != default)
+        {
+            query = query.Where(x => x.Input.Date >= request.From);
+        }
+        
+        if (request.To != default)
+        {
+            query = query.Where(x => x.Input.Date <= request.To);
+        }
+            
+        return await query
            .Select(x => new TransferTransactionShortResponse
            {
                Id = x.Id,

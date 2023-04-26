@@ -12,9 +12,9 @@ public class TransactionsController : BaseController
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetAllTransactions(CancellationToken ct)
+    public async Task<IActionResult> GetAllTransactions([FromQuery] GetAllTransactionsQuery request, CancellationToken ct)
     {
-        return Ok(await Mediator.Send(new GetAllTransactionsQuery(), ct).ConfigureAwait(false));
+        return Ok(await Mediator.Send(request, ct).ConfigureAwait(false));
     }
 
     [HttpGet("{id}")]
@@ -50,9 +50,9 @@ public class TransactionsController : BaseController
     }
 
     [HttpGet("TransferTransactions")]
-    public async Task<IActionResult> GetAllTransferTransactions(CancellationToken ct)
+    public async Task<IActionResult> GetAllTransferTransactions([FromQuery] GetAllTransferTransactionsQuery request, CancellationToken ct)
     {
-        return Ok(await Mediator.Send(new GetAllTransferTransactionsQuery(), ct).ConfigureAwait(false));
+        return Ok(await Mediator.Send(request, ct).ConfigureAwait(false));
     }
 
     [HttpGet("TransferTransactions/{id}")]

@@ -23,6 +23,7 @@ import { EditTransferPageComponent } from './pages/edit-transfer-page/edit-trans
 import { EditTransferContainerComponent } from './containers/edit-transfer-container/edit-transfer-container.component';
 import { EditTransferComponent } from './components/edit-transfer/edit-transfer.component';
 import { TransactionsStatsComponent } from './components/transactions-stats/transactions-stats.component';
+import { MonthFilterComponent } from './components/month-filter/month-filter.component';
 
 
 
@@ -48,6 +49,7 @@ import { TransactionsStatsComponent } from './components/transactions-stats/tran
     EditTransferContainerComponent,
     EditTransferComponent,
     TransactionsStatsComponent,
+    MonthFilterComponent,
   ],
   imports: [
     CommonModule,

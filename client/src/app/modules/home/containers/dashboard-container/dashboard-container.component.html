@@ -1,4 +1,10 @@
 <div class="row">
+  <app-month-filter>
+
+  </app-month-filter>
+</div>
+
+<div class="row mt-5">
   <app-accounts-list
     [accounts$]="accounts$"
     (showDetails$)="showAccountDetails($event)"

@@ -69,4 +69,33 @@ internal sealed class GetAllTransactionsTests : TestBase
         // Arrange
         result.Should().BeEmpty();
     }
+
+    [Test]
+    public async Task Handle_DatesFrovided_FilteredTransactionsReturned()
+    {
+        // Arrange
+        var account = Account.Create("Account1");
+        var transactionDetails1 = new TransactionDetails(-10.0m, TransactionType.Expense);
+        var transactionDetails2 = new TransactionDetails(-10.0m, TransactionType.Expense);
+        var transactionDetails3 = new TransactionDetails(-10.0m, TransactionType.Expense);
+        var transactionDetails4 = new TransactionDetails(-10.0m, TransactionType.Expense);
+        Context.Add(Transaction.Create(account, "name", transactionDetails1, new DateTime(2023, 01, 14)));
+        Context.Add(Transaction.Create(account, "name", transactionDetails2, new DateTime(2023, 01, 15)));
+        Context.Add(Transaction.Create(account, "name", transactionDetails3, new DateTime(2023, 02, 15)));
+        Context.Add(Transaction.Create(account, "name", transactionDetails4, new DateTime(2023, 02, 16)));
+        
+        await Context.SaveChangesAsync();
+        var request = new GetAllTransactionsQuery
+        {
+            From = new DateTime(2023, 01, 15),
+            To = new DateTime(2023, 02, 15)
+        };
+
+   
+        // Act
+        var result = await handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().HaveCount(2);
+    }
 }

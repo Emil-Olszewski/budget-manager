@@ -14,7 +14,11 @@ internal sealed class AccountResponse
 }
 
 
-public sealed record GetAllAccountsQuery : IRequest<List<AccountResponse>>;
+public sealed record GetAllAccountsQuery : IRequest<List<AccountResponse>>
+{
+    public DateTime From { get; init; }
+    public DateTime To { get; init; }
+}
 
 internal sealed class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, List<AccountResponse>>
 {
@@ -27,13 +31,15 @@ internal sealed class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccount
     
     public async Task<List<AccountResponse>> Handle(GetAllAccountsQuery request, CancellationToken ct)
     {
-        return await context.Set<Account>()
-            .AsNoTracking()
+        var query = context.Set<Account>()
+            .AsNoTracking();
+        
+        return await query
             .Select(x => new AccountResponse
             {
                 Id = x.Id,
                 Name = x.Name,
-                Balance = x.Transactions.Sum(y => y.TransactionDetails.Amount),
+                Balance = x.Transactions.Where(transaction => transaction.Date >= request.From && transaction.Date <= request.To).Sum(y => y.TransactionDetails.Amount),
                 Currency = x.Currency
             })
             .ToListAsync(ct)
