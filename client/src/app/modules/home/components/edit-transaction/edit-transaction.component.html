@@ -39,10 +39,11 @@
             <label for="amount" class="form-label">Amount</label>
             <input class="form-control"
                    id="amount"
-                   type="number"
+                   type="text"
                    placeholder="Enter amount"
                    formControlName="amount"
-                   formControlValidation="form.controls['amount']">
+                   formControlValidation="form.controls['amount']"
+                   [appCurrencyCode]="AccountFromCurrency">
             <app-form-control-validation-error [control]="form.controls['amount']">
             </app-form-control-validation-error>
           </div>
@@ -63,21 +64,23 @@
               </div>
               <ng-container *ngIf="tags$ | async as tags">
                 <ng-container *ngIf="transactionTags$ | async as selectedTags">
-                   <span class="badge bg-primary" *ngFor="let tag of tags"
-                         [ngClass]="selectedTags.includes(tag) ? 'bg-primary' : 'bg-secondary'"
+                  <ng-container>
+                    <span class="badge mx-1 clickable" *ngFor="let tag of tags"
+                      [ngClass]="selectedTags.includes(tag) ? 'bg-primary' : tag.type === TagType.forIncome ? 'bg-success-disabled' : 'bg-danger-disabled'"
                       (click)="selectTag(tag)">
                     {{tag.name}}
                   </span>
+                  </ng-container>
                 </ng-container>
               </ng-container>
           </div>
-          <div class="row justify-content-around mt-3">
+          <div class="row mt-3">
             <div class="col">
-              <button type="submit" class="btn btn-primary">Save</button>
+              <button *ngIf="transaction$ | async" type="button" class="btn btn-danger" (click)="delete$.emit()">Delete</button>
             </div>
             <div class="col text-end">
               <button type="button" class="btn btn-outline-primary" (click)="goBack$.emit()">Go back</button> &nbsp;
-              <button *ngIf="transaction$ | async" type="button" class="btn btn-danger" (click)="delete$.emit()">Delete</button>
+              <button type="submit" class="btn btn-primary">Save and go back</button>
             </div>
           </div>
         </form>

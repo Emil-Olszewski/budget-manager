@@ -3,6 +3,8 @@
 
 $primary: #284b63;
 $light: #E9EBEC;
+$danger-disabled: #e5a0a8;
+$success-disabled: #b5dab5;
 
 /* Importing Bootstrap SCSS file. */
 @import "./node_modules/bootstrap/scss/bootstrap";
@@ -20,4 +22,12 @@ body {
 
 .card {
   border: none;
+}
+
+.bg-danger-disabled {
+  background: $danger-disabled;
+}
+
+.bg-success-disabled {
+  background: $success-disabled;
 }

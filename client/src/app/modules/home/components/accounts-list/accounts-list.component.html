@@ -3,7 +3,7 @@
     <h1>Accounts</h1>
   </div>
   <ng-container *ngIf="accounts$ | async as accounts">
-    <div class="row">
+    <div class="row gap">
       <div *ngFor="let account of accounts$ | async" class=" col-3">
         <div class="card card-body bg-light">
           <h5>{{account.name}}</h5>
@@ -15,7 +15,7 @@
           </button>
         </div>
       </div>
-      <div class="col-3">
+      <div class="col-3 mt-3">
         <div class="card card-body h-100 justify-content-end bg-light">
           <h3 class="text-secondary text-center">+</h3>
           <button class="btn btn-sm btn-primary" (click)="addAccount$.emit()">Add account</button>
