@@ -36,7 +36,10 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.accounts$.pipe(takeUntil(this.notifier$))
-      .subscribe(x => this.accounts = x);
+      .subscribe(x => {
+        this.accounts = x;
+        this.form.controls['account'].setValue(x[0].id);
+      });
 
     this.transaction$
       .pipe(take(1), combineLatestWith(this.tags$, this.accounts$))
@@ -45,7 +48,7 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
         this.form.controls['name'].setValue(x[0].name);
         this.form.controls['amount'].setValue(x[0].amount);
         this.form.controls['date'].setValue((new Date(x[0].date).toJSON().split('T')[0]));
-        this.transactionTags$.next(x[1].filter(y => x[0].tags.map(z => z.id).includes(y.id)));
+        this.transactionTags$.next(this.flattenTags(x[1]).filter(y => x[0].tags.map(z => z.id).includes(y.id)));
         this.id = x[0].id;
 
         const account = x[2].find(account => account.id === x[0].accountId)!.currency;
@@ -57,24 +60,9 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
         });
      });
 
-    /*
-    every tag can have children, and every of them can have children too and so on
-    we need to get all of them and add to new array called 'flattenedTags'
-     */
-
     this.tags$.pipe(takeUntil(this.notifier$))
       .subscribe(x => {
-        const flattenedTags: Tag[] = [];
-        const getChildren = (tags: Tag[]) => {
-          tags.forEach(tag => {
-            flattenedTags.push(tag);
-            if (tag.children.length > 0) {
-              getChildren(tag.children);
-            }
-          });
-        };
-        getChildren(x);
-        this.tags$ = new BehaviorSubject<Tag[]>(flattenedTags);
+        this.tags$ = new BehaviorSubject<Tag[]>(this.flattenTags(x));
       });
 
     this.form.controls['account'].valueChanges
@@ -84,6 +72,20 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
           directive.currencyChanged(this.accounts.find(account => account.id === +x)!.currency);
         });
       })
+  }
+
+  private flattenTags(tags: Tag[]): Tag[] {
+    const flattenedTags: Tag[] = [];
+    const getChildren = (tags: Tag[]) => {
+      tags.forEach(tag => {
+        flattenedTags.push(tag);
+        if (tag.children.length > 0) {
+          getChildren(tag.children);
+        }
+      });
+    };
+    getChildren(tags);
+    return flattenedTags;
   }
 
   public ngOnDestroy() {
@@ -96,11 +98,12 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
       this.form.markAllAsTouched();
       return;
     }
+    const formattedAmount = this.form.controls['amount'].value.toString().replace(',', '.').trim();
     const transaction: UpdateTransaction = {
       id: this.id,
       name: this.form.controls['name'].value,
       type: this.form.controls['amount'].value > 0 ? TransactionType.income : TransactionType.expense,
-      amount: this.form.controls['amount'].value,
+      amount: +formattedAmount,
       date: this.form.controls['date'].value,
       accountId: this.form.controls['account'].value,
       tagIds: this.transactionTags$.getValue().map(x => x.id)

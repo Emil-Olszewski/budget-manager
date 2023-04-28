@@ -39,7 +39,8 @@ export class CurrencyCodeDirective {
   }
 
   private bindAmount(): void {
-    this.amount = +this.el.nativeElement.value;
+    const formatted = this.el.nativeElement.value.replace(',', '.');
+    this.amount = +formatted.trim();
     if (isNaN(this.amount)) {
       this.amount = 0;
       this.el.nativeElement.value = 0;

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { TransactionsService } from "../../services/transactions.service";
 import { Transaction, TransferTransactionShort } from "../../models/transaction";
 import { FilteringSpec } from "./filtering-spec";
+import { LocalStorageService } from "../../../../core/local-storage/local-storage.service";
 
 
 @Component({
@@ -20,7 +21,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
   public filteredTransactions$: ReplaySubject<Transaction[]> = new ReplaySubject<Transaction[]>()
   public transferTransactions$: ReplaySubject<TransferTransactionShort[]> = new ReplaySubject<TransferTransactionShort[]>();
   constructor(private accountsService: AccountsService, private transactionsService: TransactionsService,
-              private router: Router, private route: ActivatedRoute) { }
+              private router: Router, private route: ActivatedRoute, private storage: LocalStorageService) { }
   public ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.notifier$))
@@ -72,7 +73,13 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
       .subscribe({
         next: response=> {
           this.transactions$.next(response.body);
-          this.filteredTransactions$.next(response.body);
+          const spec = this.storage.getItem('filteringSpec') as FilteringSpec;
+          console.log(spec);
+          if (spec) {
+            this.applyFilters(spec);
+          } else {
+            this.filteredTransactions$.next(response.body);
+          }
         }
       });
     this.transactionsService.getAllTransferTransactions(new Date(dateFrom), new Date(dateTo))
@@ -110,5 +117,6 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
     var transactions = this.transactions$.getValue();
     transactions = transactions.filter(t => spec.accountIds.includes(t.accountId));
     this.filteredTransactions$.next(transactions);
+    this.storage.setItem('filteringSpec', spec);
   }
 }

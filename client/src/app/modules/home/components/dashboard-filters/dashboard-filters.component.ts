@@ -4,6 +4,7 @@ import { Observable, Subject, take, takeUntil } from "rxjs";
 import { Account } from "../../models/account";
 import { ActivatedRoute } from "@angular/router";
 import { FilteringSpec } from "../../containers/dashboard-container/filtering-spec";
+import { LocalStorageService } from "../../../../core/local-storage/local-storage.service";
 
 @Component({
   selector: 'app-dashboard-filters',
@@ -21,7 +22,7 @@ export class DashboardFiltersComponent implements OnInit, OnDestroy {
     return this.form.get('accounts') as FormArray<FormControl>;
   }
 
-  constructor(private builder: FormBuilder, private route: ActivatedRoute) {
+  constructor(private builder: FormBuilder, private route: ActivatedRoute, private storage: LocalStorageService) {
   }
 
   public ngOnInit(): void {
@@ -31,9 +32,16 @@ export class DashboardFiltersComponent implements OnInit, OnDestroy {
         this.form = this.builder.group({
           accounts: this.buildControls(accounts)
         });
+        const spec = this.storage.getItem('filteringSpec') as FilteringSpec;
+        if (spec) {
+          this.form.patchValue({
+            accounts: accounts.map(account => {
+              return spec.accountIds.includes(account.id);
+            })
+          });
+        }
         this.form.valueChanges.pipe(takeUntil(this.notifier$))
           .subscribe(x => {
-            console.log(x);
             this.apply();
           });
       });
