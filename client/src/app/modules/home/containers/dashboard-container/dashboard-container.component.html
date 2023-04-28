@@ -1,6 +1,5 @@
 <div class="row">
   <app-month-filter>
-
   </app-month-filter>
 </div>
 
@@ -14,8 +13,14 @@
 </div>
 
 <div class="row mt-5">
+  <app-dashboard-filters
+  [accounts$]="accounts$"
+  (applyFilters)="applyFilters($event)">
+  </app-dashboard-filters>
+</div>
+<div class="row mt-5">
   <app-transactions-list
-    [transactions$]="transactions$"
+    [transactions$]="filteredTransactions$"
     [accounts$]="accounts$"
     [transferTransactions$]="transferTransactions$"
     (addTransaction$)="addTransaction()"
@@ -26,7 +31,7 @@
 
 <div class="row mt-5">
   <app-transactions-stats
-    [transactions$]="transactions$"
+    [transactions$]="filteredTransactions$"
     [accounts$]="accounts$"
     [transferTransactions$]="transferTransactions$">
   </app-transactions-stats>

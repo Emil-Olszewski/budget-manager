@@ -24,6 +24,7 @@ import { EditTransferContainerComponent } from './containers/edit-transfer-conta
 import { EditTransferComponent } from './components/edit-transfer/edit-transfer.component';
 import { TransactionsStatsComponent } from './components/transactions-stats/transactions-stats.component';
 import { MonthFilterComponent } from './components/month-filter/month-filter.component';
+import { DashboardFiltersComponent } from './components/dashboard-filters/dashboard-filters.component';
 
 
 
@@ -50,6 +51,7 @@ import { MonthFilterComponent } from './components/month-filter/month-filter.com
     EditTransferComponent,
     TransactionsStatsComponent,
     MonthFilterComponent,
+    DashboardFiltersComponent,
   ],
   imports: [
     CommonModule,

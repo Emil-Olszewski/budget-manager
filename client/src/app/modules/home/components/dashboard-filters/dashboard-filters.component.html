@@ -1,0 +1,20 @@
+<div class="card p-3">
+  <div class="mb-3">
+    <h1>Filters</h1>
+    <span class="text-secondary">
+      These filters will be applied to transactions list and statistics.
+    </span>
+  </div>
+  <form *ngIf="form" [formGroup]="form">
+    <div class="d-flex justify-content-center gap-2 mt-3" *ngIf="accounts$ | async as accounts">
+<!--      <ng-container *ngFor="let account of accounts">-->
+<!--        <input type="checkbox" class="btn-check" id="accounts_{{account.id}}" checked (click)="click()">-->
+<!--        <label class="btn btn-outline-primary" for="accounts_{{account.id}}">{{account.name}}</label>-->
+<!--      </ng-container>-->
+      <ng-container *ngFor="let control of controls.controls; index as i">
+        <input type="checkbox" class="btn-check" id="accounts_{{i}}" [formControl]="control">
+        <label class="btn btn-outline-primary" for="accounts_{{i}}">{{accounts[i].name}}</label>
+      </ng-container>
+    </div>
+  </form>
+</div>

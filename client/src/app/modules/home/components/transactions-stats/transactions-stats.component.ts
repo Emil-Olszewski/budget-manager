@@ -27,7 +27,7 @@ export class TransactionsStatsComponent implements OnInit {
 
     const model: StatsModel = new StatsModel();
 
-    transactions.filter(x => x.type !== TransactionType.transfer).forEach(transaction => {
+    transactions.forEach(transaction => {
       const account = accounts.find(x => x.id === transaction.accountId)!;
       model.balance += this.convertToPln(transaction.amount, account.currency);
       transaction.amount;

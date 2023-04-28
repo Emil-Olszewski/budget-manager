@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 import { AccountsService } from "../../services/accounts.service";
 import { Account } from "../../models/account";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TransactionsService } from "../../services/transactions.service";
 import { Transaction, TransferTransactionShort } from "../../models/transaction";
+import { FilteringSpec } from "./filtering-spec";
 
 
 @Component({
@@ -15,7 +16,8 @@ import { Transaction, TransferTransactionShort } from "../../models/transaction"
 export class DashboardContainerComponent implements OnInit, OnDestroy {
   private notifier$: Subject<never> = new Subject<never>();
   public accounts$: ReplaySubject<Account[]> = new ReplaySubject<Account[]>();
-  public transactions$: ReplaySubject<Transaction[]> = new ReplaySubject<Transaction[]>();
+  private transactions$: BehaviorSubject<Transaction[]> = new BehaviorSubject<Transaction[]>([]);
+  public filteredTransactions$: ReplaySubject<Transaction[]> = new ReplaySubject<Transaction[]>()
   public transferTransactions$: ReplaySubject<TransferTransactionShort[]> = new ReplaySubject<TransferTransactionShort[]>();
   constructor(private accountsService: AccountsService, private transactionsService: TransactionsService,
               private router: Router, private route: ActivatedRoute) { }
@@ -68,7 +70,10 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
     this.transactionsService.getAllTransactions(new Date(dateFrom), new Date(dateTo))
       .pipe(take(1))
       .subscribe({
-        next: response => this.transactions$.next(response.body)
+        next: response=> {
+          this.transactions$.next(response.body);
+          this.filteredTransactions$.next(response.body);
+        }
       });
     this.transactionsService.getAllTransferTransactions(new Date(dateFrom), new Date(dateTo))
       .pipe(take(1))
@@ -99,5 +104,11 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
 
   public showTransferDetails(id: number): void {
     this.router.navigate(['transfers', 'edit', id]);
+  }
+
+  public applyFilters(spec: FilteringSpec) {
+    var transactions = this.transactions$.getValue();
+    transactions = transactions.filter(t => spec.accountIds.includes(t.accountId));
+    this.filteredTransactions$.next(transactions);
   }
 }
