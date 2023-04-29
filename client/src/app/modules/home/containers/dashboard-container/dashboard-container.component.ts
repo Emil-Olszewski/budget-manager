@@ -74,7 +74,6 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
         next: response=> {
           this.transactions$.next(response.body);
           const spec = this.storage.getItem('filteringSpec') as FilteringSpec;
-          console.log(spec);
           if (spec) {
             this.applyFilters(spec);
           } else {

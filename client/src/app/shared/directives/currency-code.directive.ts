@@ -28,7 +28,6 @@ export class CurrencyCodeDirective {
   }
 
   public initWithCurrency(currency: Currency) {
-    console.log('initWithCurrency')
     this.bindAmount();
     this.formatCurrencyCode(currency);
   }

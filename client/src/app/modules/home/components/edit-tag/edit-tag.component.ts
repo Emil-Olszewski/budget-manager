@@ -27,7 +27,6 @@ export class EditTagComponent implements OnInit {
     this.tag$
       .pipe(take(1))
       .subscribe(x => {
-        console.log(x)
         this.form.controls['name'].setValue(x.name);
         this.form.controls['type2'].setValue(x.type);
         this.id = x.id;
