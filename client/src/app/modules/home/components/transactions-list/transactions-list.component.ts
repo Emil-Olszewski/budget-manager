@@ -1,20 +1,41 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Transaction, TransactionType, TransferTransactionShort } from "../../models/transaction";
-import { Observable } from "rxjs";
+import { Observable, Subject, take, takeUntil } from "rxjs";
 import { Account, Currency } from "../../models/account";
+import { formatDate } from "@angular/common";
 
 @Component({
   selector: 'app-transactions-list',
   templateUrl: './transactions-list.component.html',
   styleUrls: ['./transactions-list.component.scss']
 })
-export class TransactionsListComponent {
+export class TransactionsListComponent implements OnInit, OnDestroy {
+  public dates: string[] = [];
+  private notifier$: Subject<never> = new Subject<never>();
   @Input() public transactions$!: Observable<Transaction[]>;
   @Input() public transferTransactions$!: Observable<TransferTransactionShort[]>;
   @Input() public accounts$!: Observable<Account[]>;
   @Output() public addTransaction$: EventEmitter<never> = new EventEmitter<never>();
   @Output() public showDetails$: EventEmitter<number> = new EventEmitter<number>();
   @Output() public showTransferDetails$: EventEmitter<number> = new EventEmitter<number>();
+
+  public ngOnInit(): void {
+    this.transactions$.pipe(takeUntil(this.notifier$))
+      .subscribe(transactions => {
+        const dates = transactions.map(x => formatDate(x.date, 'yyyy-MM-dd', 'en'));
+        this.dates = dates.filter((value, index, self) => self.indexOf(value) === index);
+      });
+  }
+
+  public ngOnDestroy(): void {
+    this.notifier$.next(null as never);
+    this.notifier$.complete();
+  }
+
+  public isStripped(transaction: Transaction): boolean {
+    const date = formatDate(transaction.date, 'yyyy-MM-dd', 'en');
+    return this.dates.indexOf(date) % 2 !== 0;
+  }
 
   public getColorForType(type: TransactionType): string {
     switch (type) {

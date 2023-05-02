@@ -58,17 +58,17 @@ export class EditTransactionContainerComponent implements OnInit {
       });
   }
 
-  public save(transaction: UpdateTransaction) {
+  public save(transaction: UpdateTransaction, createNew: boolean = false): void {
     if (transaction.id > 0) {
       this.service.updateTransaction(transaction)
         .pipe(take(1))
         .subscribe({
-          next: () => this.goBack()
+          next: () => this.goBack(createNew)
         });
     } else {
       this.service.createTransaction(transaction).pipe(take(1))
         .subscribe({
-          next: () => this.goBack()
+          next: () => this.goBack(createNew)
         });
     }
   }
@@ -81,7 +81,13 @@ export class EditTransactionContainerComponent implements OnInit {
       });
   }
 
-  public goBack(): void {
-    this.router.navigateByUrl('');
+  public goBack(createNew: boolean = false): void {
+    if (createNew) {
+      this.router.navigateByUrl('', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['transactions', 'edit', 0]);
+      });
+    } else {
+      this.router.navigateByUrl('');
+    }
   }
 }

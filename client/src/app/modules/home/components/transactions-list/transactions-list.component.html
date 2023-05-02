@@ -1,15 +1,21 @@
 <div class="card p-3 border-0">
-  <div class="mb-3">
-    <h1>Transactions</h1>
-  </div>
+
   <ng-container *ngIf="transactions$ | async as transactions">
     <ng-container *ngIf="transactions.length === 0; else transactionsList">
+      <div class="mb-3">
+        <h1>Transactions</h1>
+      </div>
       You have no transactions yet.
       <div class="mb-3"></div>
     </ng-container>
   </ng-container>
 
   <ng-template #transactionsList>
+    <ng-container *ngIf="transactions$ | async as transactions">
+      <div class="mb-3">
+        <h1>Transactions ({{transactions.length}})</h1>
+      </div>
+    <button class="btn btn-primary" (click)="addTransaction$.emit()">Add transaction</button>
     <table class="table table-hover">
       <thead>
       <tr>
@@ -20,13 +26,13 @@
       </tr>
       </thead>
       <tbody>
-      <ng-container *ngIf="transactions$ | async as transactions">
         <ng-container *ngIf="accounts$ | async as accounts">
           <ng-container *ngIf="transferTransactions$ | async as transferTransactions">
-            <tr *ngFor="let transaction of transactions" (click)="showDetails(transaction, transferTransactions)" class="clickable">
+            <tr *ngFor="let transaction of transactions" (click)="showDetails(transaction, transferTransactions)" class="clickable"
+            [ngClass]="{'table-light': this.isStripped(transaction)}">
               <td>{{getAccountName(transaction.accountId, accounts)}}</td>
               <td>
-                {{getTransactionName(transaction, transferTransactions, accounts)}}
+                {{getTransactionName(transaction, transferTransactions, accounts)}} &nbsp;
                 <ng-container *ngFor="let tag of transaction.tags" >
                   <span class="badge bg-secondary">
                     {{tag.name}}
@@ -37,14 +43,16 @@
               <td [ngClass]="getColorForType(transaction.type)">
                 <ng-container *ngIf="transaction.amount > 0">+</ng-container>{{transaction.amount | number: '1.2'}}
                 {{getAccountCurrency(transaction.accountId, accounts) | CurrencyCode }}
+                <span class="text-secondary text-sm">
+                  {{transaction.accountBalanceAfter}} {{getAccountCurrency(transaction.accountId, accounts) | CurrencyCode }}
+                </span>
               </td>
               <td>{{transaction.date | date: 'dd-MM-yyyy'}}</td>
             </tr>
           </ng-container>
         </ng-container>
-      </ng-container>
       </tbody>
     </table>
+    </ng-container>
   </ng-template>
-  <button class="btn btn-primary" (click)="addTransaction$.emit()">Add transaction</button>
 </div>

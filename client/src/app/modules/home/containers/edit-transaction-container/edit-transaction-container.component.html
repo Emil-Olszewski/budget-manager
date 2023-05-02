@@ -1,6 +1,7 @@
 <app-edit-transaction
   (delete$)="delete()"
   (save$)="save($event)"
+  (saveAndCreateNew$)="save($event, true)"
   (goBack$)="goBack()"
   [tags$]="tags$"
   [transaction$]="transaction$"

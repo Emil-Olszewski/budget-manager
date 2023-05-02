@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Account, Currency } from "../../models/account";
 import { Tag, TagType } from "../../models/tag";
 import { CurrencyCodeDirective } from "../../../../shared/directives/currency-code.directive";
+import { formatDate } from "@angular/common";
 
 @Component({
   selector: 'app-edit-transaction',
@@ -18,6 +19,7 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
   @Input() public accounts$!: Observable<Account[]>;
   @Input() public tags$!: Observable<Tag[]>
   @Output() public save$: EventEmitter<UpdateTransaction> = new EventEmitter<UpdateTransaction>();
+  @Output() public saveAndCreateNew$: EventEmitter<UpdateTransaction> = new EventEmitter<UpdateTransaction>();
   @Output() public delete$: EventEmitter<never> = new EventEmitter<never>();
   @Output() public goBack$: EventEmitter<never> = new EventEmitter<never>()
   private accounts: Account[] = [];
@@ -27,7 +29,7 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
     account: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required, Validators.maxLength(40)]),
     amount: new FormControl('', [Validators.required]),
-    date: new FormControl(new Date().toJSON().split('T')[0], [Validators.required]),
+    date: new FormControl(formatDate(new Date(),   'yyyy-MM-dd', 'en'), [Validators.required]),
   });
 
   public get AccountFromCurrency(): Currency {
@@ -47,7 +49,7 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
         this.form.controls['account'].setValue(x[0].accountId);
         this.form.controls['name'].setValue(x[0].name);
         this.form.controls['amount'].setValue(x[0].amount);
-        this.form.controls['date'].setValue((new Date(x[0].date).toJSON().split('T')[0]));
+        this.form.controls['date'].setValue(formatDate(x[0].date, 'yyyy-MM-dd', 'en'));
         this.transactionTags$.next(this.flattenTags(x[1]).filter(y => x[0].tags.map(z => z.id).includes(y.id)));
         this.id = x[0].id;
 
@@ -93,7 +95,7 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
     this.notifier$.complete();
   }
 
-  public submit(): void {
+  public submit(createNew: boolean = false): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -108,6 +110,12 @@ export class EditTransactionComponent implements OnInit, OnDestroy {
       accountId: this.form.controls['account'].value,
       tagIds: this.transactionTags$.getValue().map(x => x.id)
     };
+
+    if (createNew) {
+      this.saveAndCreateNew$.emit(transaction);
+      return;
+    }
+
     this.save$.emit(transaction);
   }
 

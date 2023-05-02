@@ -9,6 +9,7 @@ internal sealed class TransactionResponse
     public int AccountId { get; set; }
     public string Name { get; set; }
     public decimal Amount { get; set; }
+    public decimal AccountBalanceAfter { get; set; }
     public TransactionType Type { get; set; } 
     public DateTime Date { get; set; }
     public List<TagForTransactionResponse> Tags { get; set; }

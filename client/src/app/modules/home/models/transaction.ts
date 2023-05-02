@@ -11,6 +11,7 @@ export interface Transaction {
   accountId: number;
   name: string;
   amount: number;
+  accountBalanceAfter: number;
   type: TransactionType
   date: Date;
   tags: TagForTransaction[];

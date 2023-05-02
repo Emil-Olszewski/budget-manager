@@ -71,7 +71,7 @@ internal sealed class GetAllTransactionsTests : TestBase
     }
 
     [Test]
-    public async Task Handle_DatesFrovided_FilteredTransactionsReturned()
+    public async Task Handle_DatesProvided_FilteredTransactionsReturned()
     {
         // Arrange
         var account = Account.Create("Account1");
@@ -97,5 +97,36 @@ internal sealed class GetAllTransactionsTests : TestBase
 
         // Assert
         result.Should().HaveCount(2);
+    }
+
+    [Test]
+    public async Task Handle_ValidBalanceAfterTransactionReturned()
+    {
+        // Arrange
+        var account = Account.Create("Account1");
+        account.SetInitialBalance(40m);
+        var transactionDetails1 = new TransactionDetails(-10.0m, TransactionType.Expense);
+        var transactionDetails2 = new TransactionDetails(-10.0m, TransactionType.Expense);
+        var transactionDetails3 = new TransactionDetails(-10.0m, TransactionType.Expense);
+        var transactionDetails4 = new TransactionDetails(-10.0m, TransactionType.Expense);
+        Context.Add(Transaction.Create(account, "name", transactionDetails1, new DateTime(2023, 01, 14)));
+        Context.Add(Transaction.Create(account, "name", transactionDetails2, new DateTime(2023, 01, 15)));
+        Context.Add(Transaction.Create(account, "name", transactionDetails3, new DateTime(2023, 02, 15)));
+        Context.Add(Transaction.Create(account, "name", transactionDetails4, new DateTime(2023, 02, 16)));
+        
+        await Context.SaveChangesAsync();
+
+        var request = new GetAllTransactionsQuery();
+        
+        // Act
+        var result = await handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().HaveCount(4);
+        result[0].AccountBalanceAfter.Should().Be(00m);
+        result[1].AccountBalanceAfter.Should().Be(10m);
+        result[2].AccountBalanceAfter.Should().Be(20m);
+        result[3].AccountBalanceAfter.Should().Be(30m);
+
     }
 }

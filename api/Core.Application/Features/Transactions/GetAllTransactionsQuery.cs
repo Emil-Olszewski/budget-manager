@@ -22,29 +22,41 @@ internal sealed class GetAllTransactionQueryHandler : IRequestHandler<GetAllTran
     
     public async Task<List<TransactionResponse>> Handle(GetAllTransactionsQuery request, CancellationToken ct)
     {
-        var query = context.Set<Transaction>()
+        var allTransactions = await context.Set<Transaction>()
             .AsNoTracking()
             .Include(x => x.Account)
             .Include(x => x.Tags).ThenInclude(x => x.Parent)
-            .Where(x => x.TransactionDetails.TransactionType != TransactionType.InitialBalance)
-            .AsQueryable();
+            .OrderByDescending(x => x.Date)
+            .ToListAsync(ct)
+            .ConfigureAwait(false);
 
+        var mappedTransactions = allTransactions.Select(TransactionResponse.MapFrom).ToList();
+
+        var groupedTransactions = mappedTransactions.GroupBy(x => x.AccountId).ToList();
+        foreach (var groupedTransaction in groupedTransactions)
+        {
+            groupedTransaction.Last().AccountBalanceAfter = groupedTransaction.Last().Amount;
+            for (int i = groupedTransaction.Count()-2; i >= 0; i--)
+            {
+                // select 4th index of groupdTransaction
+                
+                groupedTransaction.ElementAt(i).AccountBalanceAfter = groupedTransaction.ElementAt(i+1).AccountBalanceAfter + groupedTransaction.ElementAt(i).Amount;
+            }
+        }
+
+        mappedTransactions = mappedTransactions.Where(x => x.Type != TransactionType.InitialBalance).ToList();
+        
         if (request.From != default)
         {
-            query = query.Where(x => x.Date >= request.From);
+            mappedTransactions = mappedTransactions.Where(x => x.Date >= request.From).ToList();
         }
         
         if (request.To != default)
         {
-            query = query.Where(x => x.Date <= request.To);
+            mappedTransactions = mappedTransactions.Where(x => x.Date <= request.To).ToList();
         }
-        
-        var result = await query
-            .Select(x => TransactionResponse.MapFrom(x))
-            .ToListAsync(ct)
-            .ConfigureAwait(false);
-        
-        return result.OrderByDescending(x => x.Date).ToList();
+
+        return mappedTransactions;
     }
 }
 
